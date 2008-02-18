@@ -1,0 +1,94 @@
+Bibtext Renderer
+================
+
+Add a lightweight content object implementing IBibrenderable.
+
+  >>> context = SimpleContent()
+
+Let's check the interface:
+
+  >>> from bibliograph.core.interfaces import IBibrenderable
+  >>> IBibrenderable.providedBy(context)
+  True
+
+Call the view
+
+  >>> from zope.publisher.browser import TestRequest
+  >>> from bibliograph.rendering.renderers.bibtex import BibtexRenderView
+
+  >>> request = TestRequest(form=dict(resolve_unicode=1))
+  >>> view = BibtexRenderView(context, request)
+
+  >>> print view()
+  <BLANKLINE>
+  @Book{approach,
+    editor = {Heinz M{\"u}ller},
+    authorURLs = {http://www.zope.org},
+    title = {A new approach to managing literat{\"u}re},
+    year = {1985},
+    URL = {http://www.books.com/approach},
+    abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
+    keywords = {Manage Literat{\"u}r}
+  }
+  <BLANKLINE>
+
+Let's change some attributes of our content.
+
+First we want no editor, but an author:
+
+  >>> context.editor_flag = False
+  >>> view = BibtexRenderView(context, request)
+  >>> print view()
+  <BLANKLINE>
+  @Book{approach,
+    author = {Heinz M{\"u}ller},
+    authorURLs = {http://www.zope.org},
+    title = {A new approach to managing literat{\"u}re},
+    year = {1985},
+    URL = {http://www.books.com/approach},
+    abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
+    keywords = {Manage Literat{\"u}r}
+  }
+  <BLANKLINE>
+
+See if we can include some additional fields:
+
+  >>> context = SimpleContent(foobar='Foo Bar')
+
+  >>> context.source_fields = ['foobar']
+  >>> view = BibtexRenderView(context, request)
+  >>> print view()
+  <BLANKLINE>
+  @Book{approach,
+    editor = {Heinz M{\"u}ller},
+    authorURLs = {http://www.zope.org},
+    title = {A new approach to managing literat{\"u}re},
+    year = {1985},
+    URL = {http://www.books.com/approach},
+    abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
+    foobar = {Foo Bar},
+    keywords = {Manage Literat{\"u}r}
+  }
+  <BLANKLINE>
+
+All the previous rendering was done in ascii with `latex encoding`. Now we
+try with utf-8
+
+  >>> request = TestRequest(form=dict(resolve_unicode=0,
+  ...                                 output_encoding='utf-8'))
+  >>> view = BibtexRenderView(context, request)
+  >>> print view()
+  <BLANKLINE>
+  @Book{approach,
+    editor = {Heinz Müller},
+    authorURLs = {http://www.zope.org},
+    title = {A new approach to managing literatüre},
+    year = {1985},
+    URL = {http://www.books.com/approach},
+    abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
+    foobar = {Foo Bar},
+    keywords = {Manage Literatür}
+  }
+  <BLANKLINE>
+
+

@@ -1,0 +1,71 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <browser:view
+    for=".interfaces.IBibrenderable"
+    name="bibliography.bib"
+    permission="zope2.View"
+    class=".renderers.bibtex.BibtexRenderView" />
+
+  <browser:view
+    for=".interfaces.IBibrenderable"
+    name="bibliography.enl"
+    permission="zope2.View"
+    class=".renderers.endnote.EndnoteRenderView" />
+
+  <browser:view
+    for=".interfaces.IBibrenderable"
+    name="bibliography.pdf"
+    permission="zope2.View"
+    class=".renderers.pdf.PdfRenderView" />
+
+  <browser:view
+    for=".interfaces.IBibrenderable"
+    name="bibliography.xml"
+    permission="zope2.View"
+    class=".renderers.endnote.XmlRenderView" />
+
+  <browser:view
+    for=".interfaces.IBibrenderable"
+    name="bibliography.ris"
+    permission="zope2.View"
+    class=".renderers.endnote.RisRenderView" />
+
+  <utility
+    provides=".interfaces.IBibTransformUtility"
+    component=".utility.ExternalTransformUtility"
+    name="external"
+    permission="zope.Public" />
+
+  <utility
+    provides=".interfaces.IBibliographyExporter"
+    component=".utility.BibtexExport"
+    name="bibtex"
+    permission="zope.Public" />
+
+  <utility
+    provides=".interfaces.IBibliographyExporter"
+    component=".utility.EndnoteExport"
+    name="endnote"
+    permission="zope.Public" />
+
+  <utility
+    provides=".interfaces.IBibliographyExporter"
+    component=".utility.PdfExport"
+    name="pdf"
+    permission="zope.Public" />
+
+  <utility
+    provides=".interfaces.IBibliographyExporter"
+    component=".utility.RisExport"
+    name="ris"
+    permission="zope.Public" />
+
+  <utility
+    provides=".interfaces.IBibliographyExporter"
+    component=".utility.XmlExport"
+    name="xml"
+    permission="zope.Public" />
+
+</configure>

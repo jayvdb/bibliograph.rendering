@@ -1,0 +1,9 @@
+0.1.0 (2008-02-04)
+==================
+
+ - Created recipe with ZopeSkel [Tom Gross].
+
+ - Added Interfaces
+
+ - Implemented bibtex-render view
+

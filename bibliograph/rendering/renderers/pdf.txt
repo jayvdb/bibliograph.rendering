@@ -1,0 +1,24 @@
+PDF Renderer
+============
+
+Render a bibliography in pdf-format.
+
+Add a lightweight content object implementing IBibrenderable.
+
+  >>> context = SimpleContent()
+
+Call the EndNote render view
+
+  >>> from zope.publisher.browser import TestRequest
+  >>> from bibliograph.rendering.renderers.pdf import PdfRenderView
+
+  >>> request = TestRequest()
+  >>> view = PdfRenderView(context, request)
+
+  We just check, if there's some PDF. We don't want to parse the output
+  here.
+  >>> print view()
+  %PDF-1...
+  %%EOF
+  <BLANKLINE>
+
