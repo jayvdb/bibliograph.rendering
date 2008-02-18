@@ -33,7 +33,7 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 # third party imports
 
 # own factory imports
-from bibliograph.core.enc import UNICODE_ENCODINGS
+from bibliograph.core.encodings import UNICODE_ENCODINGS
 from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.rendering.interfaces import IBibTransformUtility
 from bibliograph.core.utils import _convertToOutputEncoding
