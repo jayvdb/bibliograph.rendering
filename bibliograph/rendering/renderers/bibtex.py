@@ -29,7 +29,7 @@ except:
 # third party imports
 
 # own factory imports
-from bibliograph.rendering import utils
+from bibliograph.core import utils
 from bibliograph.rendering.interfaces import IBibliographyRenderer
 
 ###############################################################################

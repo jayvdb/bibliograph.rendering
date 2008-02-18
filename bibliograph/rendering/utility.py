@@ -33,11 +33,11 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 # third party imports
 
 # own factory imports
+from bibliograph.core.enc import UNICODE_ENCODINGS
 from bibliograph.core.interfaces import IBibliographyExport
-from bibliograph.rendering.enc import UNICODE_ENCODINGS
 from bibliograph.rendering.interfaces import IBibTransformUtility
-from bibliograph.rendering.utils import _convertToOutputEncoding
-from bibliograph.rendering.utils import title_or_id
+from bibliograph.core.utils import _convertToOutputEncoding
+from bibliograph.core.utils import title_or_id
 
 log = logging.getLogger('bibliograph.rendering')
 

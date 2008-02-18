@@ -50,13 +50,6 @@ class SimpleContent(Contained, dict):
     def getFieldValue(self, name):
         return self[name]
 
-class DummyEntry(object):
-
-    def __init__(self, id=None):
-        self.id = id
-
-    def getId(self):
-        return self.id
 
 
 class AbsoluteURL(object):
@@ -97,13 +90,6 @@ def test_suite():
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
             optionflags=doctest.ELLIPSIS,
-            ),
-
-        doctestunit.DocTestSuite(
-            module='bibliograph.rendering.utils',
-            setUp=testing.setUp,
-            tearDown=testing.tearDown,
-            globs=dict(DummyEntry=DummyEntry)
             ),
 
         doctestunit.DocTestSuite(
