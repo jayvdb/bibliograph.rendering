@@ -39,7 +39,7 @@ class SimpleContent(Contained, dict):
     note = u''
     annote = u''
 
-    def Authors(self, **kwargs):
+    def getAuthors(self, **kwargs):
         return Names([Name(firstnames=u'Heinz',
                            lastnames=u'Müller',
                            homepage=u'http://www.zope.org')])
@@ -70,7 +70,7 @@ def setUp(test=None):
     ztapi.provideView(IBibrenderable, None, None, name='bibliography.pdf',
                       factory=PdfRenderView)
 
-    ztapi.provideUtility(IBibTransformUtility, ExternalTransformUtility,
+    ztapi.provideUtility(IBibTransformUtility, ExternalTransformUtility(),
                          name=u'external')
     ztapi.browserViewProviding(None, AbsoluteURL, IAbsoluteURL)
 

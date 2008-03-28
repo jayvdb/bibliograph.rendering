@@ -68,7 +68,7 @@ class BibtexRenderView(object):
 
         bib_key = utils._validKey(entry)
         bibtex = "\n@%s{%s," % (entry.publication_type, bib_key)
-        authors = entry.Authors(sep=' and ',
+        authors = entry.getAuthors(sep=' and ',
                                 lastsep=' and ',
                                 format="%L, %F %M",
                                 abbrev=0,

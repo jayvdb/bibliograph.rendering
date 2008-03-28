@@ -9,7 +9,7 @@ Add a lightweight content object implementing IBibrenderable.
 Render two documents with the bibtex render utility
 
   >>> from bibliograph.rendering.utility import BibtexExport
-  >>> print BibtexExport([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print BibtexExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
   <BLANKLINE>
   @Book{approach,
     editor = {Heinz M{\"u}ller},
@@ -35,7 +35,7 @@ Render two documents with the bibtex render utility
 It is possible to capitalize the title by specifying the option
 `title_force_uppercase`.
 
-  >>> print BibtexExport([c1, c2],
+  >>> print BibtexExport().render([c1, c2],
   ...             title_force_uppercase=True) #doctest: +NORMALIZE_WHITESPACE
   <BLANKLINE>
   @Book{approach,...
@@ -45,21 +45,21 @@ It is possible to capitalize the title by specifying the option
 We can do this with the other formats as well:
 
   >>> from bibliograph.rendering.utility import EndnoteExport
-  >>> print EndnoteExport([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print EndnoteExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
   %0 Book
   ...
   %0 Book
   ...
   
   >>> from bibliograph.rendering.utility import RisExport
-  >>> print RisExport([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print RisExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
   TY  - BOOK
   ...
   TY  - BOOK
   ...
 
   >>> from bibliograph.rendering.utility import PdfExport
-  >>> print PdfExport([c1, c2])
+  >>> print PdfExport().render([c1, c2])
   %PDF-...
   %%EOF
   <BLANKLINE>
@@ -67,7 +67,7 @@ We can do this with the other formats as well:
 At least we got something, looking like a PDF :).
 
   >>> from bibliograph.rendering.utility import XmlExport
-  >>> print XmlExport([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print XmlExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
   <?xml version="1.0" encoding="UTF-8"?>
   ...
   <mods ID="approacha">

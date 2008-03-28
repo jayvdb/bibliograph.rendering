@@ -71,7 +71,7 @@ class EndnoteRenderView(object):
 
         transform = component.getUtility(IBibTransformUtility,
                                          name=u"external")
-        return transform(
+        return transform.render(
             source, self.source_format, self.target_format, output_encoding)
 
 ###############################################################################

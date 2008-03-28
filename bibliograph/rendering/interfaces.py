@@ -41,5 +41,16 @@ class IBibliographyExporter(Interface):
     """ A utility knowing how to export a bunch of
         bibliographies
     """
+    
+    source_format = schema.TextLine()
+    target_format = schema.TextLine()
+    description = schema.Text()
+    available_encodings = schema.List()
+    default_encoding = schema.TextLine()
 
+    available = schema.Bool()
+    enabled = schema.Bool()
+    
+    def render(objects, output_encoding, title_force_uppercase, msdos_eol_style):
+        """ """
 # EOF
