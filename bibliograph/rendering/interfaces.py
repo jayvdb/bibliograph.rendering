@@ -2,6 +2,8 @@ from zope.interface import Interface
 from zope import schema
 from zope.schema.vocabulary import SimpleVocabulary
 
+from bibliograph.core.encodings import _python_encodings
+
 # XXX as long as we don't have translation
 _ = unicode
 
@@ -42,14 +44,41 @@ class IBibliographyExporter(Interface):
         bibliographies
     """
     
-    source_format = schema.TextLine()
-    target_format = schema.TextLine()
-    description = schema.Text()
-    available_encodings = schema.List()
-    default_encoding = schema.TextLine()
+    source_format = schema.TextLine(
+        title=_('Source format'),
+        )
+    
+    target_format = schema.TextLine(
+        title=_('Target format'),
+        default=u'bib',
+        )
+    
+    description = schema.Text(
+        title=_('Description'),
+        default=u'',
+        )
+ 
+    available_encodings = schema.List(
+        title=_('Available encodings'),
+        value_type=schema.TextLine(
+            #vocabulary=SimpleVocabulary.fromValues(_python_encodings),
+            )
+        )
+        
+    default_encoding = schema.TextLine(
+        title=_('Default encoding'),
+        default=u''
+        )
 
-    available = schema.Bool()
-    enabled = schema.Bool()
+    available = schema.Bool(
+        title=_('Availability of renderer'),
+        default=True
+        )
+    
+    enabled = schema.Bool(
+        title=_('Renderer is enabled'),
+        default=True
+        )
     
     def render(objects, output_encoding, title_force_uppercase, msdos_eol_style):
         """ """

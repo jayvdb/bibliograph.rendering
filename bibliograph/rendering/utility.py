@@ -8,7 +8,7 @@
 $Id$
 """
 __docformat__ = 'reStructuredText'
-__author__  = 'Tom Gross <thomasmichael.gross@fhnw.ch>'
+__author__  = 'Tom Gross <itconsense@gmail.com>'
 
 # python imports
 from subprocess import Popen, PIPE
@@ -18,16 +18,18 @@ import logging
 ZOPE2 = False
 try:
     from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
-    ZOPE2 = True
+    import Acquisition
+    ZOPE2 = True    
+    UtilityBaseClass = Acquisition.Explicit
 except ImportError:
-    pass
+    UtilityBaseClass = object
 
 # zope3 imports
 from zope.component import getMultiAdapter
 from zope.component import getUtility
+from zope.interface import implements
 from zope.publisher.browser import TestRequest
 from zope.traversing.browser.absoluteurl import absoluteURL
-from zope.interface import implements
 
 # plone imports
 
@@ -148,7 +150,7 @@ class ExternalTransformUtility(object):
 
 ###############################################################################
 
-class BibtexExport(object):
+class BibtexExport(UtilityBaseClass):
     
     implements(IBibTransformUtility)
     
@@ -249,7 +251,7 @@ class BibtexExport(object):
     
 ###############################################################################
 
-class EndnoteExport(object):
+class EndnoteExport(UtilityBaseClass):
     """ Export a bunch of bibliographic entries in endnote format.
     """
     
@@ -295,7 +297,7 @@ class RisExport(EndnoteExport):
 
 ###############################################################################
 
-class PdfExport(object):
+class PdfExport(UtilityBaseClass):
     """ Export a bunch of bibliographic entries in pdf format.
     """
 
