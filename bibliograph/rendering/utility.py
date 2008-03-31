@@ -148,6 +148,8 @@ class ExternalTransformUtility(object):
             return _convertToOutputEncoding(result,
                                             output_encoding=output_encoding)
 
+    transform = render
+    
 ###############################################################################
 
 class BibtexExport(UtilityBaseClass):
