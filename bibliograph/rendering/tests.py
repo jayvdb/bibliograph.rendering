@@ -29,7 +29,8 @@ class SimpleContent(Contained, dict):
 
     publication_type = u'Book'
     editor_flag = True
-    source_fields = None
+    source_fields = []
+    field_values = []
     __name__ = 'approach'
 
     title = u'A new approach to managing literatüre'
@@ -38,17 +39,20 @@ class SimpleContent(Contained, dict):
     subject = [u'Manage Literatür']
     note = u''
     annote = u''
+    url = u"http://www.books.com/approach"
+    
+    @property
+    def authors(self):
+        return self.getAuthors()()
 
     def getAuthors(self, **kwargs):
         return Names([Name(firstnames=u'Heinz',
                            lastnames=u'Müller',
                            homepage=u'http://www.zope.org')])
 
-    def getURL(self):
-        return u"http://www.books.com/approach"
-
     def getFieldValue(self, name):
         return self[name]
+
 
 
 

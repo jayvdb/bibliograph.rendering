@@ -56,6 +56,7 @@ See if we can include some additional fields:
   >>> context = SimpleContent(foobar='Foo Bar')
 
   >>> context.source_fields = ['foobar']
+  >>> context.field_values = ['Foo Bar']
   >>> view = BibtexRenderView(context, request)
   >>> print view()
   <BLANKLINE>

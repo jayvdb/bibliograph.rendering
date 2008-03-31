@@ -196,8 +196,8 @@ class BibtexExport(UtilityBaseClass):
                 # XXX let this work for zope3
             rendered = []
             for entry in entries:
-                if not IBibrenderable.providedBy(entry):
-                    continue
+                adapter = IBibrenderable(entry, None)
+                if adapter is None: continue
                 if with_btree_memory_efficiency:
                     # _tree.itervalues() returns unwrapped objects,
                     # but renderEntry needs
@@ -211,7 +211,7 @@ class BibtexExport(UtilityBaseClass):
                     else:
                         pass
                         # XXX let this work for zope3
-                view = getMultiAdapter((entry, request),
+                view = getMultiAdapter((adapter, request),
                                        name=u'bibliography.bib')
                 bibtex_string = view.render(
                     resolve_unicode=resolve_unicode,

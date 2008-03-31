@@ -17,15 +17,6 @@ import logging
 # zope3 imports
 from zope.interface import implements
 
-# plone imports
-try:
-    from Products.Archetypes.utils import shasattr
-except:
-    # we don't want to depend on Archetypes
-    _marker = []
-    def shasattr(obj, attr):
-        return getattr(obj, attr, _marker) is not _marker
-
 # third party imports
 
 # own factory imports
@@ -68,17 +59,10 @@ class BibtexRenderView(object):
 
         bib_key = utils._validKey(entry)
         bibtex = "\n@%s{%s," % (entry.publication_type, bib_key)
-        authors = entry.getAuthors(sep=' and ',
-                                lastsep=' and ',
-                                format="%L, %F %M",
-                                abbrev=0,
-                                lastnamefirst=0)()
-        if not isinstance(authors, unicode):
-            authors = unicode(authors, 'utf-8')
-        if shasattr(entry, 'editor_flag') and entry.editor_flag:
-            bibtex += "\n  editor = {%s}," % authors
+        if entry.editor_flag:
+            bibtex += "\n  editor = {%s}," % entry.authors
         else:
-            bibtex += "\n  author = {%s}," % authors
+            bibtex += "\n  author = {%s}," % entry.authors
         aURLs = utils.AuthorURLs(entry)
         if aURLs.find('http') > -1:
             bibtex += "\n  authorURLs = {%s}," % aURLs
@@ -87,22 +71,12 @@ class BibtexRenderView(object):
         else:
             bibtex += "\n  title = {%s}," % entry.title
         bibtex += "\n  year = {%s}," % entry.publication_year
-        if hasattr(entry, 'aq_base'):
-            url = entry.aq_base.getURL()
-        else:
-            url = entry.getURL()
-        if url: bibtex += "\n  URL = {%s}," % url
+        if entry.url: bibtex += "\n  URL = {%s}," % entry.url            
         bibtex += "\n  abstract = {%s}," % entry.abstract
 
-        if shasattr(entry, 'source_fields') and entry.source_fields:
-            source_fields = list(entry.source_fields)
-            field_values = [entry.getFieldValue(name)
-                            for name in source_fields]
-            if 'publication_type' in source_fields:
-                source_fields[source_fields.index('publication_type')] = 'type'
-            for key, value in zip(source_fields, field_values):
-                if value:
-                    bibtex += "\n  %s = {%s}," % (key, value)
+        for key, val in zip(entry.source_fields, entry.field_values):           
+            if val is not None:
+                bibtex += "\n  %s = {%s}," % (key.lower(), val)
 
         kws = ', '.join(entry.subject)
         if kws:
