@@ -75,7 +75,7 @@ class BibtexRenderView(object):
         bibtex += "\n  abstract = {%s}," % entry.abstract
 
         for key, val in zip(entry.source_fields, entry.field_values):           
-            if val is not None:
+            if val:
                 bibtex += "\n  %s = {%s}," % (key.lower(), val)
 
         kws = ', '.join(entry.subject)
