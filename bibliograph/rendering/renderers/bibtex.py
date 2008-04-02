@@ -71,10 +71,11 @@ class BibtexRenderView(object):
         else:
             bibtex += "\n  title = {%s}," % entry.title
         bibtex += "\n  year = {%s}," % entry.publication_year
-        if entry.url: bibtex += "\n  URL = {%s}," % entry.url            
-        bibtex += "\n  abstract = {%s}," % entry.abstract
+        if entry.url: bibtex += "\n  URL = {%s}," % entry.url
+        if entry.abstract:
+            bibtex += "\n  abstract = {%s}," % entry.abstract
 
-        for key, val in zip(entry.source_fields, entry.field_values):           
+        for key, val in zip(entry.source_fields, entry.field_values):
             if val:
                 if not isinstance(val, unicode):
                     val = utils._decode(val)
@@ -82,6 +83,8 @@ class BibtexRenderView(object):
 
         kws = ', '.join(entry.subject)
         if kws:
+            if not isinstance(kws, unicode):
+                kws = utils._decode(kws)
             bibtex += "\n  keywords = {%s}," % kws
         note = getattr(entry, 'note', None)
         if note:
