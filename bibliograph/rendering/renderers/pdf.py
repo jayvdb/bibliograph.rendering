@@ -57,7 +57,7 @@ DEFAULT_TEMPLATE = r"""
 
 
 \nocite{*}
-\bibliographystyle{abbrv}
+\bibliographystyle{%s}
 \bibliography{references}
 
 
@@ -102,6 +102,7 @@ class PdfRenderView(object):
     """ A view rendering a bibliography """
 
     implements(IBibliographyRenderer)
+    citation_format = 'abbrv'
 
     def __init__(self, context, request):
         self.context = context
@@ -112,6 +113,8 @@ class PdfRenderView(object):
         title_force_uppercase = self.request.get('title_force_uppercase', False)
         msdos_eol_style = self.request.get('msdos_eol_style', False)
         output_encoding = self.request.get('output_encoding', 'utf-8')
+        self.citation_format = self.request.get('bibstyle',
+                                                self.citation_format)
         return self.render(resolve_unicode,
                            title_force_uppercase,
                            msdos_eol_style,
@@ -143,7 +146,8 @@ class PdfRenderView(object):
         template = getattr(self.context, 'template', DEFAULT_TEMPLATE)
         template = template % (
             unicode(utils._normalize(title, True), 'utf-8').encode('latin-1'),
-            unicode(utils._normalize(url, True), 'utf-8').encode('latin-1')
+            unicode(utils._normalize(url, True), 'utf-8').encode('latin-1'),
+            self.citation_format
             )
         wd = getWorkingDirectory()
         tex_path = os.path.join(wd, 'template.tex')

@@ -76,6 +76,8 @@ class BibtexRenderView(object):
 
         for key, val in zip(entry.source_fields, entry.field_values):           
             if val:
+                if not isinstance(val, unicode):
+                    val = utils._decode(val)
                 bibtex += "\n  %s = {%s}," % (key.lower(), val)
 
         kws = ', '.join(entry.subject)
