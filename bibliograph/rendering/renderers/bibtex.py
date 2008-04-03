@@ -75,7 +75,7 @@ class BibtexRenderView(object):
         if entry.abstract:
             bibtex += "\n  abstract = {%s}," % entry.abstract
 
-        for key, val in zip(entry.source_fields, entry.field_values):
+        for key, val in entry.source_fields:
             if val:
                 if not isinstance(val, unicode):
                     val = utils._decode(val)
