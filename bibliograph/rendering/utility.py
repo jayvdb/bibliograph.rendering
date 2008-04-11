@@ -32,7 +32,13 @@ from zope.publisher.browser import TestRequest
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 # plone imports
-
+WITH_PLONE = False
+try:
+    from Products.ATContentTypes.content.topic import ATTopic
+    WITH_PLONE = True
+except ImportError:
+    pass
+    
 # third party imports
 
 # own factory imports
@@ -191,6 +197,9 @@ class BibtexExport(UtilityBaseClass):
                 if isinstance(objects[0], BTreeFolder2Base):
                     with_btree_memory_efficiency = True
                     entries = objects[0]._tree.itervalues()
+                elif WITH_PLONE and isinstance(objects[0], ATTopic):
+                    with_btree_memory_efficiency = False
+                    entries = objects[0].synContentValues()
                 else:
                     with_btree_memory_efficiency = False
                     entries = objects[0].contentValues()
