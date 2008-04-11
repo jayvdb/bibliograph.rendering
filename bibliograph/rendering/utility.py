@@ -42,6 +42,7 @@ from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.core.interfaces import IBibrenderable
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
+from bibliograph.core.utils import _encode
 from bibliograph.rendering.interfaces import IBibTransformUtility
 
 log = logging.getLogger('bibliograph.rendering')
@@ -127,7 +128,7 @@ class ExternalTransformUtility(object):
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   close_fds=True)
         (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
-        fi.write(data)
+        fi.write(_encode(data))
         fi.close()
         result = fo.read()
         fo.close()
