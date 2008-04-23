@@ -335,14 +335,14 @@ class PdfExport(UtilityBaseClass):
             objects = [objects]
     
         source = BibtexExport().render(objects,
-                              output_encoding='latin-1',
+                              output_encoding='utf-8',
                               title_force_uppercase=True)  
         context = objects[0] 
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'bibliography.pdf')
         return view.processSource(source,
-                                  title_or_id(context),
-                                  absoluteURL(context, request))
+                                  title=title_or_id(context),
+                                  url=absoluteURL(context, request))
 
 ###############################################################################
 

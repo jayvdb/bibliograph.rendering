@@ -48,8 +48,8 @@ DEFAULT_TEMPLATE = r"""
 
 \begin{document}
 \begin{center}
-{\large \bf %s}\\
-(URL: %s)
+{\large \bf %(title)s}\\
+(URL: %(url)s)
 \end{center}
 
 
@@ -57,7 +57,7 @@ DEFAULT_TEMPLATE = r"""
 
 
 \nocite{*}
-\bibliographystyle{%s}
+\bibliographystyle{abbrv}
 \bibliography{references}
 
 
@@ -102,7 +102,6 @@ class PdfRenderView(object):
     """ A view rendering a bibliography """
 
     implements(IBibliographyRenderer)
-    citation_format = 'abbrv'
 
     def __init__(self, context, request):
         self.context = context
@@ -113,8 +112,6 @@ class PdfRenderView(object):
         title_force_uppercase = self.request.get('title_force_uppercase', False)
         msdos_eol_style = self.request.get('msdos_eol_style', False)
         output_encoding = self.request.get('output_encoding', 'utf-8')
-        self.citation_format = self.request.get('bibstyle',
-                                                self.citation_format)
         return self.render(resolve_unicode,
                            title_force_uppercase,
                            msdos_eol_style,
@@ -133,22 +130,28 @@ class PdfRenderView(object):
         source = bibrender.render(output_encoding='latin-1',
                                   title_force_uppercase=True)
         return self.processSource(source,
-            utils.title_or_id(self.context),
-            absoluteURL(self.context, self.request))
+            title=utils.title_or_id(self.context),
+            url=absoluteURL(self.context, self.request))
 
-    def processSource(self, source, title, url):
+    def getTemplate(self, **kwargs):
+        template = getattr(self.context, 'latextemplate', None)
+        if template is None:
+            values = {'title': 'Bibliographic Export',
+                      'url': ''}
+            for key, val in kwargs.items():
+                values[key] = unicode(utils._normalize(val, True),
+                         'utf-8').encode('latin-1')
+            template = DEFAULT_TEMPLATE % values
+        return template
+
+    def processSource(self, source, **kwargs):
         """
         use latex/bibtex/pdflatex to generate the pdf
         from the passed in BibTeX file in 'source' using
         the (LaTeX) source tempalte from the renderer's
         'template' property
         """
-        template = getattr(self.context, 'template', DEFAULT_TEMPLATE)
-        template = template % (
-            unicode(utils._normalize(title, True), 'utf-8').encode('latin-1'),
-            unicode(utils._normalize(url, True), 'utf-8').encode('latin-1'),
-            self.citation_format
-            )
+        template = self.getTemplate(**kwargs)
         wd = getWorkingDirectory()
         tex_path = os.path.join(wd, 'template.tex')
         bib_path = os.path.join(wd, 'references.bib')
