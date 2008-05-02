@@ -1,7 +1,7 @@
 Bibtext Renderer
 ================
 
-Add a lightweight content object implementing IBibrenderable.
+Add a lightweight content object implementing IBibliographicReference.
 
   >>> c1 = SimpleContent()
   >>> c2 = SimpleContent()

@@ -1,14 +1,14 @@
 Bibtext Renderer
 ================
 
-Add a lightweight content object implementing IBibrenderable.
+Add a lightweight content object implementing IBibliographicReference.
 
   >>> context = SimpleContent()
 
 Let's check the interface:
 
-  >>> from bibliograph.core.interfaces import IBibrenderable
-  >>> IBibrenderable.providedBy(context)
+  >>> from bibliograph.core.interfaces import IBibliographicReference
+  >>> IBibliographicReference.providedBy(context)
   True
 
 Call the view

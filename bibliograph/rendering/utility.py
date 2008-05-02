@@ -32,12 +32,6 @@ from zope.publisher.browser import TestRequest
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 # plone imports
-WITH_PLONE = False
-try:
-    from Products.ATContentTypes.content.topic import ATTopic
-    WITH_PLONE = True
-except ImportError:
-    pass
     
 # third party imports
 
@@ -45,7 +39,7 @@ except ImportError:
 from bibliograph.core.encodings import UNICODE_ENCODINGS
 from bibliograph.core.encodings import _python_encodings
 from bibliograph.core.interfaces import IBibliographyExport
-from bibliograph.core.interfaces import IBibrenderable
+from bibliograph.core.interfaces import IBibliographicReference
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
 from bibliograph.core.utils import _encode
@@ -197,9 +191,6 @@ class BibtexExport(UtilityBaseClass):
                 if isinstance(objects[0], BTreeFolder2Base):
                     with_btree_memory_efficiency = True
                     entries = objects[0]._tree.itervalues()
-                elif WITH_PLONE and isinstance(objects[0], ATTopic):
-                    with_btree_memory_efficiency = False
-                    entries = objects[0].synContentValues()
                 else:
                     with_btree_memory_efficiency = False
                     entries = objects[0].contentValues()
@@ -208,8 +199,6 @@ class BibtexExport(UtilityBaseClass):
                 # XXX let this work for zope3
             rendered = []
             for entry in entries:
-                adapter = IBibrenderable(entry, None)
-                if adapter is None: continue
                 if with_btree_memory_efficiency:
                     # _tree.itervalues() returns unwrapped objects,
                     # but renderEntry needs
@@ -223,6 +212,8 @@ class BibtexExport(UtilityBaseClass):
                     else:
                         pass
                         # XXX let this work for zope3
+                adapter = IBibliographicReference(entry, None)
+                if adapter is None: continue
                 view = getMultiAdapter((adapter, request),
                                        name=u'bibliography.bib')
                 bibtex_string = view.render(
@@ -286,7 +277,7 @@ class EndnoteExport(UtilityBaseClass):
         """ do it 
         """
         source = BibtexExport().render(objects,
-                              output_encoding='ascii',
+                              output_encoding='iso-8859-1',
                               title_force_uppercase=title_force_uppercase,
                               msdos_eol_style=msdos_eol_style)
         transform = getUtility(IBibTransformUtility, name=u"external")  
@@ -335,7 +326,7 @@ class PdfExport(UtilityBaseClass):
             objects = [objects]
     
         source = BibtexExport().render(objects,
-                              output_encoding='utf-8',
+                              output_encoding='iso-8859-1',
                               title_force_uppercase=True)  
         context = objects[0] 
         request = getattr(context, 'REQUEST', TestRequest())

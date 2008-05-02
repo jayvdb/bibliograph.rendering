@@ -1,8 +1,12 @@
 .. contents::
 
-.. Note to recipe author!
+.. bibliograph.rendering
    ---------------------
-   Update the following URL to point to your code repository or remove
-   it if one is not available.
+   
+Package contains renderers for different bibliographic formats. It uses an
+adapter to extract data from Zope/Plone-objects and provides utilities to call
+the renderers. Currently supported formats are: bibtex, endnote, pdf,
+xml (mods), and ris.
 
-Code repository: http://svn.somewhere.com/...
+Homepage: http://pypi.python.org/pypi/bibliograph.core
+Code repository: http://svn.plone.org/svn/collective/bibliograph.core/

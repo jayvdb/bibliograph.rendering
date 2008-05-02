@@ -3,7 +3,7 @@ PDF Renderer
 
 Render a bibliography in pdf-format.
 
-Add a lightweight content object implementing IBibrenderable.
+Add a lightweight content object implementing IBibliographicReference.
 
   >>> context = SimpleContent()
 

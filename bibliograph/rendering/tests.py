@@ -9,7 +9,7 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.app.container.contained import Contained
 from zope.interface import implements
 
-from bibliograph.core.interfaces import IBibrenderable
+from bibliograph.core.interfaces import IBibliographicReference
 from bibliograph.rendering.interfaces import IBibTransformUtility
 
 
@@ -25,7 +25,7 @@ class Names(list):
 
 class SimpleContent(Contained, dict):
 
-    implements(IBibrenderable)
+    implements(IBibliographicReference)
 
     publication_type = u'Book'
     editor_flag = True
@@ -69,9 +69,9 @@ def setUp(test=None):
     from bibliograph.rendering.renderers.bibtex import BibtexRenderView
     from bibliograph.rendering.renderers.pdf import PdfRenderView
     from bibliograph.rendering.utility import ExternalTransformUtility
-    ztapi.provideView(IBibrenderable, None, None, name='bibliography.bib',
+    ztapi.provideView(IBibliographicReference, None, None, name='bibliography.bib',
                       factory=BibtexRenderView)
-    ztapi.provideView(IBibrenderable, None, None, name='bibliography.pdf',
+    ztapi.provideView(IBibliographicReference, None, None, name='bibliography.pdf',
                       factory=PdfRenderView)
 
     ztapi.provideUtility(IBibTransformUtility, ExternalTransformUtility(),

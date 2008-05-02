@@ -3,19 +3,19 @@
   xmlns:browser="http://namespaces.zope.org/browser">
 
   <browser:view
-    for="bibliograph.core.interfaces.IBibrenderable"
+    for="bibliograph.core.interfaces.IBibliographicReference"
     name="bibliography.bib"
     permission="zope2.View"
     class=".renderers.bibtex.BibtexRenderView" />
 
   <browser:view
-    for="bibliograph.core.interfaces.IBibrenderable"
+    for="bibliograph.core.interfaces.IBibliographicReference"
     name="bibliography.enl"
     permission="zope2.View"
     class=".renderers.endnote.EndnoteRenderView" />
 
   <browser:view
-    for="bibliograph.core.interfaces.IBibrenderable"
+    for="bibliograph.core.interfaces.IBibliographicReference"
     name="bibliography.pdf"
     permission="zope2.View"
     class=".renderers.pdf.PdfRenderView" />
@@ -27,13 +27,13 @@
     class=".renderers.pdf.PdfRenderView" />
 
   <browser:view
-    for="bibliograph.core.interfaces.IBibrenderable"
+    for="bibliograph.core.interfaces.IBibliographicReference"
     name="bibliography.xml"
     permission="zope2.View"
     class=".renderers.endnote.XmlRenderView" />
 
   <browser:view
-    for="bibliograph.core.interfaces.IBibrenderable"
+    for="bibliograph.core.interfaces.IBibliographicReference"
     name="bibliography.ris"
     permission="zope2.View"
     class=".renderers.endnote.RisRenderView" />
