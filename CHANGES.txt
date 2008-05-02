@@ -1,9 +1,6 @@
-0.1.0 (2008-02-04)
+0.1.0 (2008-05-02)
 ==================
 
  - Created recipe with ZopeSkel [Tom Gross].
 
- - Added Interfaces
-
- - Implemented bibtex-render view
-
+ - Ported renderer from Products.CMFBibliographyAT
