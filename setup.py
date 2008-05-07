@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-version = '0.1'
+version = '0.2 svn'
 
 long_description = (
     read('README.txt')
@@ -62,6 +62,5 @@ setup(name='bibliograph.rendering',
                         'bibliograph.core'
                         ],
       tests_require=['zope.testing'],
-      test_suite = 'bibliograph.rendering.tests.test_suite',
       entry_points=entry_points,
       )
