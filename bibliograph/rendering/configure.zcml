@@ -134,4 +134,10 @@
 
   </class>
 
+  <adapter
+      for="OFS.interfaces.IFolder"
+      factory=".adapter.Zope2FolderAdapter"
+      provides="bibliograph.core.interfaces.IBibContainerIterator"
+      />
+
 </configure>

@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 import unittest, doctest
 
-from zope.testing import doctestunit
-from zope.component import testing
 from zope.app.testing import ztapi
+from zope.component import testing
+from zope.testing import doctestunit
 from zope.traversing.browser.interfaces import IAbsoluteURL
 
 from zope.app.container.contained import Contained
 from zope.interface import implements
 
+from bibliograph.core.interfaces import IBibContainerIterator
 from bibliograph.core.interfaces import IBibliographicReference
+from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.rendering.interfaces import IBibTransformUtility
+from bibliograph.rendering.interfaces import IBibliographyExporter
+from bibliograph.rendering.renderers.bibtex import BibtexRenderView
+from bibliograph.rendering.utility import BibtexExport
+from bibliograph.rendering.adapter import Zope2FolderAdapter
 
+from Testing.ZopeTestCase import ZopeDocTestSuite
 
 class Name(dict):
 
@@ -53,9 +60,6 @@ class SimpleContent(Contained, dict):
     def getFieldValue(self, name):
         return self[name]
 
-
-
-
 class AbsoluteURL(object):
 
     def __init__(self, context, request):
@@ -66,17 +70,40 @@ class AbsoluteURL(object):
 
 def setUp(test=None):
     testing.setUp()
-    from bibliograph.rendering.renderers.bibtex import BibtexRenderView
     from bibliograph.rendering.renderers.pdf import PdfRenderView
     from bibliograph.rendering.utility import ExternalTransformUtility
-    ztapi.provideView(IBibliographicReference, None, None, name='bibliography.bib',
+    ztapi.provideView(IBibliographicReference, None, None,
+                      name='bibliography.bib',
                       factory=BibtexRenderView)
-    ztapi.provideView(IBibliographicReference, None, None, name='bibliography.pdf',
+    ztapi.provideView(IBibliographicReference, None, None,
+                      name='bibliography.pdf',
                       factory=PdfRenderView)
 
     ztapi.provideUtility(IBibTransformUtility, ExternalTransformUtility(),
                          name=u'external')
     ztapi.browserViewProviding(None, AbsoluteURL, IAbsoluteURL)
+
+
+class SampleAdapter(Zope2FolderAdapter):
+
+    def prehook(self, entry):
+        print "prehook called!"
+        return entry
+        
+    def posthook(self, entry):
+        print "posthook called!"
+
+
+def setUpAdapter(test=None):
+    testing.setUp()
+    ztapi.provideUtility(IBibliographyExporter, BibtexExport(),
+                         name=u'bibtex')
+    ztapi.provideAdapter(IBibliographyExport,
+                         IBibContainerIterator,
+                         SampleAdapter)
+    ztapi.provideView(IBibliographicReference, None, None,
+                      name='bibliography.bib',
+                      factory=BibtexRenderView)
 
 def test_suite():
     suite = unittest.TestSuite([
@@ -99,6 +126,13 @@ def test_suite():
         doctestunit.DocTestSuite(
             module='bibliograph.rendering.utility',
             setUp=testing.setUp,
+            tearDown=testing.tearDown,
+            optionflags=doctest.ELLIPSIS,
+            ),
+
+        ZopeDocTestSuite(
+            module='bibliograph.rendering.adapter',
+            setUp=setUpAdapter,
             tearDown=testing.tearDown,
             optionflags=doctest.ELLIPSIS,
             ),

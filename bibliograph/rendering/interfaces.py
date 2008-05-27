@@ -1,8 +1,5 @@
 from zope.interface import Interface
 from zope import schema
-from zope.schema.vocabulary import SimpleVocabulary
-
-from bibliograph.core.encodings import _python_encodings
 
 # XXX as long as we don't have translation
 _ = unicode
@@ -60,9 +57,7 @@ class IBibliographyExporter(Interface):
  
     available_encodings = schema.List(
         title=_('Available encodings'),
-        value_type=schema.TextLine(
-            #vocabulary=SimpleVocabulary.fromValues(_python_encodings),
-            )
+        value_type=schema.TextLine()
         )
         
     default_encoding = schema.TextLine(

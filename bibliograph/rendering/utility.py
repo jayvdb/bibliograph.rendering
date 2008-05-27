@@ -15,11 +15,8 @@ from subprocess import Popen, PIPE
 import logging
 
 # zope2 imports
-ZOPE2 = False
 try:
-    from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
-    import Acquisition
-    ZOPE2 = True    
+    import Acquisition    
     UtilityBaseClass = Acquisition.Explicit
 except ImportError:
     UtilityBaseClass = object
@@ -40,6 +37,7 @@ from bibliograph.core.encodings import UNICODE_ENCODINGS
 from bibliograph.core.encodings import _python_encodings
 from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.core.interfaces import IBibliographicReference
+from bibliograph.core.interfaces import IBibContainerIterator
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
 from bibliograph.core.utils import _encode
@@ -182,38 +180,17 @@ class BibtexExport(UtilityBaseClass):
             request = TestRequest()
     
         if IBibliographyExport.providedBy(objects[0]):
-            # tim2p: Begin some memory optimization for BTree-ish folder types.
-            # There is an element of hack to this. While it relies on a public
-            # method, that method is on a private ('_tree') attribute.
-            # Well, it saves me 90MB of RAM for my c.700 ref database,
-            # so I'm happy :).
-            if ZOPE2:
-                if isinstance(objects[0], BTreeFolder2Base):
-                    with_btree_memory_efficiency = True
-                    entries = objects[0]._tree.itervalues()
-                else:
-                    with_btree_memory_efficiency = False
-                    entries = objects[0].contentValues()
-            else:
-                pass
-                # XXX let this work for zope3
+            entries = IBibContainerIterator(objects[0], None)
             rendered = []
             for entry in entries:
-                if with_btree_memory_efficiency:
-                    # _tree.itervalues() returns unwrapped objects,
-                    # but renderEntry needs
-                    # context-aware objects, so we wrap it.
-                    # Check to see if the object has been changed (elsewhere in the
-                    # current transaction/request.
-                    changed = getattr(entry, '_p_changed', False)
-                    deactivate = not changed
-                    if ZOPE2:
-                        entry = entry.__of__(objects[0])
-                    else:
-                        pass
-                        # XXX let this work for zope3
+                # call prehook
+                prehook = getattr(entries, 'prehook', None)
+                if callable(prehook): entry = entries.prehook(entry)
+
                 adapter = IBibliographicReference(entry, None)
                 if adapter is None: continue
+
+                # do rendering for entry
                 view = getMultiAdapter((adapter, request),
                                        name=u'bibliography.bib')
                 bibtex_string = view.render(
@@ -222,15 +199,11 @@ class BibtexExport(UtilityBaseClass):
                     msdos_eol_style=msdos_eol_style,
                     )
                 rendered.append(bibtex_string)
-                if with_btree_memory_efficiency and deactivate:
-                    # We now 'unload' the entry from the ZODB object cache to
-                    # reclaim its memory.
-                    # See http://wiki.zope.org/ZODB/UnloadingObjects for details.
-                    # XXX In fact, there are probably no bad side-effects to
-                    # making this call even if not with_btree_memory_effiency.
-                    # However, I want my patch to be
-                    # as non-intrusive as possible, so I don't do that now.
-                    entry._p_deactivate()
+                
+                # call posthook
+                posthook = getattr(entries, 'posthook', None)
+                if callable(posthook): entries.posthook(entry)
+                
             return _convertToOutputEncoding(''.join(rendered),
                                             output_encoding=output_encoding)
     
@@ -247,7 +220,7 @@ class BibtexExport(UtilityBaseClass):
                 rendered.append(bibtex)
             if output_encoding is not None:
                 return _convertToOutputEncoding(''.join(rendered),
-                                            output_encoding=output_encoding)
+                                                output_encoding=output_encoding)
             else:
                 return ''.join(rendered)
         return ''
