@@ -1,6 +1,7 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
-  xmlns:browser="http://namespaces.zope.org/browser">
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <browser:view
     for="bibliograph.core.interfaces.IBibliographicReference"
@@ -135,6 +136,7 @@
   </class>
 
   <adapter
+      zcml:condition="installed OFS.Folder.Folder"
       for="OFS.interfaces.IFolder"
       factory=".adapter.Zope2FolderAdapter"
       provides="bibliograph.core.interfaces.IBibContainerIterator"

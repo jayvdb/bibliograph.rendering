@@ -20,8 +20,6 @@ from bibliograph.rendering.utility import BibtexExport
 from bibliograph.rendering.utility import _hasCommands
 from bibliograph.rendering.utility import commands
 
-from Testing.ZopeTestCase import ZopeDocTestSuite
-
 class Name(dict):
 
     def __call__(self):
@@ -95,6 +93,8 @@ class SampleAdapter(Zope2FolderAdapter):
     def posthook(self, entry):
         print "posthook called!"
 
+    def __iter__(self):
+        return iter(self.context.values())
 
 def setUpAdapter(test=None):
     testing.setUp()
@@ -137,7 +137,7 @@ def test_suite():
             optionflags=doctest.ELLIPSIS,
             ))
 
-    suite.addTest(ZopeDocTestSuite(
+    suite.addTest(doctestunit.DocTestSuite(
             module='bibliograph.rendering.adapter',
             setUp=setUpAdapter,
             tearDown=testing.tearDown,
