@@ -22,3 +22,17 @@ Call the EndNote render view
   %%EOF
   <BLANKLINE>
 
+Now let's test the utility.
+
+  >>> c1 = SimpleContent()
+  >>> c2 = SimpleContent()
+
+Render two documents with the pdf render utility
+
+  >>> from bibliograph.rendering.utility import PdfExport
+  >>> print PdfExport().render([context, c1, c2])
+  %PDF-...
+  %%EOF
+  <BLANKLINE>
+  
+At least we got something, looking like a PDF :).

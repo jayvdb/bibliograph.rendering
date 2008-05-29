@@ -12,11 +12,13 @@ from zope.interface import implements
 from bibliograph.core.interfaces import IBibContainerIterator
 from bibliograph.core.interfaces import IBibliographicReference
 from bibliograph.core.interfaces import IBibliographyExport
+from bibliograph.rendering.adapter import Zope2FolderAdapter
 from bibliograph.rendering.interfaces import IBibTransformUtility
 from bibliograph.rendering.interfaces import IBibliographyExporter
 from bibliograph.rendering.renderers.bibtex import BibtexRenderView
 from bibliograph.rendering.utility import BibtexExport
-from bibliograph.rendering.adapter import Zope2FolderAdapter
+from bibliograph.rendering.utility import _hasCommands
+from bibliograph.rendering.utility import commands
 
 from Testing.ZopeTestCase import ZopeDocTestSuite
 
@@ -47,7 +49,7 @@ class SimpleContent(Contained, dict):
     note = u''
     annote = u''
     url = u"http://www.books.com/approach"
-    
+
     @property
     def authors(self):
         return self.getAuthors()()
@@ -89,7 +91,7 @@ class SampleAdapter(Zope2FolderAdapter):
     def prehook(self, entry):
         print "prehook called!"
         return entry
-        
+
     def posthook(self, entry):
         print "posthook called!"
 
@@ -105,39 +107,111 @@ def setUpAdapter(test=None):
                       name='bibliography.bib',
                       factory=BibtexRenderView)
 
-def test_suite():
-    suite = unittest.TestSuite([
+NOBIBUTILSMSG = """One or more transformationtool was not found!
+please make sure bibutils is installed to run all tests. """
 
-        # Unit tests for your API
+NOLATEXMSG = """One of latex, bibtex, pdflatex was not found!
+please make sure these are installed to run all tests. """
+
+
+def test_suite():
+    utilsavailable = True
+    latexavailable = True
+    
+    suite = unittest.TestSuite()
+    suite.addTest(
         doctestunit.DocFileSuite(
-            'renderers/pdf.txt',
-            'renderers/endnote.txt',
             'renderers/bibtex.txt',
-            'renderers/ris.txt',
-            'renderers/xml.txt',
             'renderers/utility.txt',
             package='bibliograph.rendering',
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
             optionflags=doctest.ELLIPSIS,
-            ),
+            ))
 
-        doctestunit.DocTestSuite(
+    suite.addTest(doctestunit.DocTestSuite(
             module='bibliograph.rendering.utility',
             setUp=testing.setUp,
             tearDown=testing.tearDown,
             optionflags=doctest.ELLIPSIS,
-            ),
+            ))
 
-        ZopeDocTestSuite(
+    suite.addTest(ZopeDocTestSuite(
             module='bibliograph.rendering.adapter',
             setUp=setUpAdapter,
             tearDown=testing.tearDown,
             optionflags=doctest.ELLIPSIS,
-            ),
+            ))
 
-        ])
+    if _hasCommands(commands.get('bib2end')):
+
+        suite.addTest(doctestunit.DocFileSuite(
+            'renderers/endnote.txt',
+            package='bibliograph.rendering',
+            setUp=setUp,
+            tearDown=testing.tearDown,
+            globs=dict(SimpleContent=SimpleContent),
+            optionflags=doctest.ELLIPSIS,
+            ))
+
+    else:
+        utilsavailable = False
+
+    if _hasCommands(commands.get('bib2ris')):
+        suite.addTest(doctestunit.DocFileSuite(
+            'renderers/ris.txt',
+            package='bibliograph.rendering',
+            setUp=setUp,
+            tearDown=testing.tearDown,
+            globs=dict(SimpleContent=SimpleContent),
+            optionflags=doctest.ELLIPSIS,
+            ))
+    else:
+        utilsavailable = False
+        
+    if _hasCommands(commands.get('bib2xml')):
+        suite.addTest(doctestunit.DocFileSuite(
+            'renderers/xml.txt',
+            package='bibliograph.rendering',
+            setUp=setUp,
+            tearDown=testing.tearDown,
+            globs=dict(SimpleContent=SimpleContent),
+            optionflags=doctest.ELLIPSIS,
+            ))
+    else:
+        utilsavailable = False
+
+    if _hasCommands('latex|bibtex|pdflatex'):
+        suite.addTest(doctestunit.DocFileSuite(
+            'renderers/pdf.txt',
+            package='bibliograph.rendering',
+            setUp=setUp,
+            tearDown=testing.tearDown,
+            globs=dict(SimpleContent=SimpleContent),
+            optionflags=doctest.ELLIPSIS,
+            ))
+    else:
+        latexavailable = False
+
+    if utilsavailable:
+        suite.addTest(doctestunit.DocFileSuite(
+            'renderers/bibutility.txt',
+            package='bibliograph.rendering',
+            setUp=setUp,
+            tearDown=testing.tearDown,
+            globs=dict(SimpleContent=SimpleContent),
+            optionflags=doctest.ELLIPSIS,
+            ))
+
+    if not utilsavailable:
+        print NOBIBUTILSMSG
+        print "-" * 20
+        
+    if not latexavailable:
+        print NOLATEXMSG
+        print "-" * 20
+
     return suite
 
 if __name__ == '__main__':

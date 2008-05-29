@@ -16,7 +16,7 @@ import logging
 
 # zope2 imports
 try:
-    import Acquisition    
+    import Acquisition
     UtilityBaseClass = Acquisition.Explicit
 except ImportError:
     UtilityBaseClass = object
@@ -29,7 +29,7 @@ from zope.publisher.browser import TestRequest
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 # plone imports
-    
+
 # third party imports
 
 # own factory imports
@@ -41,6 +41,8 @@ from bibliograph.core.interfaces import IBibContainerIterator
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
 from bibliograph.core.utils import _encode
+from bibliograph.core.utils import bin_search
+
 from bibliograph.rendering.interfaces import IBibTransformUtility
 
 log = logging.getLogger('bibliograph.rendering')
@@ -76,6 +78,37 @@ commands = {'bib2xml':'bib2xml',
 def _getKey(source_format, target_format):
     return '2'.join([source_format, target_format])
 
+
+def _hasCommands(command):
+    """ Check if a collection of piped commands is available
+
+        >>> _hasCommands('python -o|idle -wrt')
+        True
+
+        >>> _hasCommands(' something_strange -m | python')
+        False
+
+    """
+    for cmd in command.split('|'):
+        cmd = cmd.strip()
+        if ' ' in cmd:
+            cmd = cmd[:cmd.find(' ')]
+        if bin_search(cmd, False) is False:
+            log.warn('Command %s not found in search path!', cmd)
+            return False
+    return True
+
+def _getCommand(source_format, target_format):
+    key = _getKey(source_format, target_format)
+    command = commands.get(key, None)
+    if command is None:
+        raise ValueError, "No transformation from '%s' to '%s' found." \
+              % (source_format, target_format)
+
+    if not _hasCommands(command):
+        return ''
+    return command
+
 ###############################################################################
 
 class ExternalTransformUtility(object):
@@ -85,11 +118,11 @@ class ExternalTransformUtility(object):
     def render(self, data, source_format, target_format, output_encoding=None):
         """ Transform data from 'source_format'
             to 'target_format'
-    
+
             We have nothing, so we do nothing :)
             >>> ExternalTransformUtility().render('', 'bib', 'end')
             ''
-    
+
             >>> data = '''
             ...   @Book{bookreference.2008-02-04.7570607450,
             ...     author = {Werner, kla{\"u}s},
@@ -97,32 +130,30 @@ class ExternalTransformUtility(object):
             ...     year = {1980},
             ...     publisher = {Diogenes}
             ...   }'''
-    
-            This should work. We transform the `bib`-format into the `end`-
-            format
-            >>> print ExternalTransformUtility().render(data, 'bib', 'end')
-            %0 Book
-            %A Werner, kla"us title =. H"arry Motter
-            %D 1980
-            %I Diogenes
-            %F bookreference.2008-02-04.7570607450
-            <BLANKLINE>
-            <BLANKLINE>
-    
+
+            This should work. (If external bibutils are installed!)
+            We transform the `bib`-format into the `end`-format
+            >>> if _hasCommands(commands.get('bib2end')):
+            ...     result = ExternalTransformUtility().render(data, 'bib', 'end')
+            ...     assert '''
+            ... %0 Book
+            ... %A Werner, kla"us title =. H"arry Motter
+            ... %D 1980
+            ... %I Diogenes
+            ... %F bookreference.2008-02-04.7570607450 '''.strip() in result
+
             This one is not allowed. No valid transformer exists for
             `foo` and `bar` (foo2bar)
             >>> ExternalTransformUtility().render(data, 'foo', 'bar')
             Traceback (most recent call last):
             ...
             ValueError: No transformation from 'foo' to 'bar' found.
-    
+
         """
-        key = _getKey(source_format, target_format)
-        command = commands.get(key, None)
-        if command is None:
-            raise ValueError, "No transformation from '%s' to '%s' found." \
-                  % (source_format, target_format)
-    
+        command = _getCommand(source_format, target_format)
+        if not command:
+            return ''
+        
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   close_fds=True)
         (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
@@ -148,13 +179,13 @@ class ExternalTransformUtility(object):
                                             output_encoding=output_encoding)
 
     transform = render
-    
+
 ###############################################################################
 
 class BibtexExport(UtilityBaseClass):
-    
+
     implements(IBibTransformUtility)
-    
+
     __name__ = u'BibTeX'
     source_format = None
     target_format = u'bib'
@@ -164,21 +195,21 @@ class BibtexExport(UtilityBaseClass):
 
     available = True
     enabled = True
-    
+
     def render(self, objects, output_encoding=None,
                      title_force_uppercase=False,
                      msdos_eol_style=False):
         """ Export a bunch of bibliographic entries in bibex format.
         """
         resolve_unicode = output_encoding not in UNICODE_ENCODINGS
-    
+
         if not isinstance(objects, (list, tuple)):
             objects = [objects]
-    
+
         request = getattr(objects[0], 'REQUEST', None)
         if request is None:
             request = TestRequest()
-    
+
         if IBibliographyExport.providedBy(objects[0]):
             entries = IBibContainerIterator(objects[0], None)
             rendered = []
@@ -199,14 +230,14 @@ class BibtexExport(UtilityBaseClass):
                     msdos_eol_style=msdos_eol_style,
                     )
                 rendered.append(bibtex_string)
-                
+
                 # call posthook
                 posthook = getattr(entries, 'posthook', None)
                 if callable(posthook): entries.posthook(entry)
-                
+
             return _convertToOutputEncoding(''.join(rendered),
                                             output_encoding=output_encoding)
-    
+
         # processing a single or a list of BibRef Items
         else:
             rendered = []
@@ -224,51 +255,65 @@ class BibtexExport(UtilityBaseClass):
             else:
                 return ''.join(rendered)
         return ''
-    
+
 ###############################################################################
 
 class EndnoteExport(UtilityBaseClass):
     """ Export a bunch of bibliographic entries in endnote format.
     """
-    
+
     implements(IBibTransformUtility)
 
     __name__ = u'EndNote'
     source_format = u'bib'
     target_format = u'end'
     description = u''
-    
-    available = True
+
     enabled = True
 
     available_encodings = _python_encodings
     default_encoding = u''
-    
+
+    @property
+    def available(self):
+        return bool(_getCommand(self.source_format, self.target_format))
+        
     def render(self, objects, output_encoding=None,
                      title_force_uppercase=False,
                      msdos_eol_style=False):
-        """ do it 
+        """ do it
         """
         source = BibtexExport().render(objects,
                               output_encoding='iso-8859-1',
                               title_force_uppercase=title_force_uppercase,
                               msdos_eol_style=msdos_eol_style)
-        transform = getUtility(IBibTransformUtility, name=u"external")  
+        transform = getUtility(IBibTransformUtility, name=u"external")
         return transform.render(source,
                                 self.source_format,
                                 self.target_format,
                                 output_encoding)
-             
+
 ###############################################################################
 
 class RisExport(EndnoteExport):
     """ Export a bunch of bibliographic entries in ris format.
     """
-    __name__ = u'RIS'    
+    __name__ = u'RIS'
     target_format = u'ris'
     description = u''
-    
-    available = True
+
+    enabled = True
+
+###############################################################################
+
+class XmlExport(EndnoteExport):
+    """ Export a bunch of bibliographic entries in xml format.
+    """
+
+    __name__ = u'XML (MODS)'
+    target_format = u'xml'
+    description = u''
+
     enabled = True
 
 ###############################################################################
@@ -283,13 +328,16 @@ class PdfExport(UtilityBaseClass):
     source_format = u''
     target_format = u'pdf'
     description = u''
-    
-    available = True
+
     enabled = True
 
     available_encodings = []
     default_encoding = u''
 
+    @property
+    def available(self):
+        return bool(_hasCommands('latex|bibtex|pdflatex'))
+    
     def render(self, objects, output_encoding=None,
                      title_force_uppercase=False,
                      msdos_eol_style=False):
@@ -297,28 +345,15 @@ class PdfExport(UtilityBaseClass):
         """
         if not isinstance(objects, (list, tuple)):
             objects = [objects]
-    
+
         source = BibtexExport().render(objects,
                               output_encoding='iso-8859-1',
-                              title_force_uppercase=True)  
-        context = objects[0] 
+                              title_force_uppercase=True)
+        context = objects[0]
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'bibliography.pdf')
         return view.processSource(source,
                                   title=title_or_id(context),
                                   url=absoluteURL(context, request))
-
-###############################################################################
-
-class XmlExport(EndnoteExport):
-    """ Export a bunch of bibliographic entries in xml format.
-    """
-   
-    __name__ = u'XML (MODS)'
-    target_format = u'xml'
-    description = u''
-    
-    available = True
-    enabled = True
 
 # EOF

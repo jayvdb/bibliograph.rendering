@@ -41,37 +41,3 @@ It is possible to capitalize the title by specifying the option
   @Book{approach,...
   title = {{A} new approach to managing literat{\"u}re},
   ...
-
-We can do this with the other formats as well:
-
-  >>> from bibliograph.rendering.utility import EndnoteExport
-  >>> print EndnoteExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
-  %0 Book
-  ...
-  %0 Book
-  ...
-  
-  >>> from bibliograph.rendering.utility import RisExport
-  >>> print RisExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
-  TY  - BOOK
-  ...
-  TY  - BOOK
-  ...
-
-  >>> from bibliograph.rendering.utility import PdfExport
-  >>> print PdfExport().render([c1, c2])
-  %PDF-...
-  %%EOF
-  <BLANKLINE>
-  
-At least we got something, looking like a PDF :).
-
-  >>> from bibliograph.rendering.utility import XmlExport
-  >>> print XmlExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
-  <?xml version="1.0" encoding="UTF-8"?>
-  ...
-  <mods ID="approacha">
-  ...
-  <mods ID="approachb">
-  ...
-  
