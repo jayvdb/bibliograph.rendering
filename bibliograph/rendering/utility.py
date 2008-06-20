@@ -82,7 +82,7 @@ def _getKey(source_format, target_format):
 def _hasCommands(command):
     """ Check if a collection of piped commands is available
 
-        >>> _hasCommands('python -o|idle -wrt')
+        >>> _hasCommands('python -o|python -wrt')
         True
 
         >>> _hasCommands(' something_strange -m | python')
@@ -98,7 +98,8 @@ def _hasCommands(command):
             return False
     return True
 
-def _getCommand(source_format, target_format):
+_marker = object()
+def _getCommand(source_format, target_format, default=_marker):
     key = _getKey(source_format, target_format)
     command = commands.get(key, None)
     if command is None:
@@ -106,7 +107,10 @@ def _getCommand(source_format, target_format):
               % (source_format, target_format)
 
     if not _hasCommands(command):
-        return ''
+        if default is _marker:
+            raise LookupError, "Command %s not found." % command
+        else:
+            return default
     return command
 
 ###############################################################################
@@ -120,8 +124,9 @@ class ExternalTransformUtility(object):
             to 'target_format'
 
             We have nothing, so we do nothing :)
-            >>> ExternalTransformUtility().render('', 'bib', 'end')
-            ''
+            >>> if _getCommand('bib', 'end', None) is not None: 
+            ...     result = ExternalTransformUtility().render('', 'bib', 'end')
+            ...     assert result == ''
 
             >>> data = '''
             ...   @Book{bookreference.2008-02-04.7570607450,
@@ -211,7 +216,7 @@ class BibtexExport(UtilityBaseClass):
             request = TestRequest()
 
         if IBibliographyExport.providedBy(objects[0]):
-            entries = IBibContainerIterator(objects[0], None)
+            entries = IBibContainerIterator(objects[0], [])
             rendered = []
             for entry in entries:
                 # call prehook
@@ -276,7 +281,7 @@ class EndnoteExport(UtilityBaseClass):
 
     @property
     def available(self):
-        return bool(_getCommand(self.source_format, self.target_format))
+        return bool(_getCommand(self.source_format, self.target_format, False))
         
     def render(self, objects, output_encoding=None,
                      title_force_uppercase=False,

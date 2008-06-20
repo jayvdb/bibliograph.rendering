@@ -15,14 +15,10 @@ import tempfile
 import os
 import shutil
 
-# zope2 imports
-
-# zope3 imports
+# zope imports
 from zope.interface import implements
 from zope import component
 from zope.traversing.browser.absoluteurl import absoluteURL
-
-# plone imports
 
 # third party imports
 

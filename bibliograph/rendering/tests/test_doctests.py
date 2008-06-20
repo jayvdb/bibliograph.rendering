@@ -114,6 +114,8 @@ NOLATEXMSG = """One of latex, bibtex, pdflatex was not found!
 please make sure these are installed to run all tests. """
 
 
+OPTS = doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
+
 def test_suite():
     utilsavailable = True
     latexavailable = True
@@ -127,21 +129,21 @@ def test_suite():
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
 
     suite.addTest(doctestunit.DocTestSuite(
             module='bibliograph.rendering.utility',
             setUp=testing.setUp,
             tearDown=testing.tearDown,
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
 
     suite.addTest(doctestunit.DocTestSuite(
             module='bibliograph.rendering.adapter',
             setUp=setUpAdapter,
             tearDown=testing.tearDown,
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
 
     if _hasCommands(commands.get('bib2end')):
@@ -152,7 +154,7 @@ def test_suite():
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
 
     else:
@@ -165,7 +167,7 @@ def test_suite():
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
     else:
         utilsavailable = False
@@ -177,7 +179,7 @@ def test_suite():
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
     else:
         utilsavailable = False
@@ -189,7 +191,7 @@ def test_suite():
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
     else:
         latexavailable = False
@@ -201,7 +203,7 @@ def test_suite():
             setUp=setUp,
             tearDown=testing.tearDown,
             globs=dict(SimpleContent=SimpleContent),
-            optionflags=doctest.ELLIPSIS,
+            optionflags=OPTS,
             ))
 
     if not utilsavailable:

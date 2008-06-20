@@ -12,9 +12,7 @@ __author__  = 'Tom Gross <itconsense@gmail.com>'
 # python imports
 import logging
 
-# zope2 imports
-
-# zope3 imports
+# zope imports
 from zope.interface import implements
 
 # third party imports
