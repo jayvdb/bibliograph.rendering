@@ -161,8 +161,9 @@ class ExternalTransformUtility(object):
             return ''
         
         orig_path = os.environ['PATH']
-        os.environ['PATH'] = os.pathsep.join([orig_path,
-                                              os.environ['BIBUTILS_PATH']])
+        if os.environ.has_key('BIBUTILS_PATH'):
+            os.environ['PATH'] = os.pathsep.join([orig_path,
+                                                  os.environ['BIBUTILS_PATH']])
 
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   close_fds=True)
