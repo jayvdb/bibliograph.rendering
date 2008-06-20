@@ -11,6 +11,7 @@ __docformat__ = 'reStructuredText'
 __author__  = 'Tom Gross <itconsense@gmail.com>'
 
 # python imports
+import os
 from subprocess import Popen, PIPE
 import logging
 
@@ -159,6 +160,10 @@ class ExternalTransformUtility(object):
         if not command:
             return ''
         
+        orig_path = os.environ['PATH']
+        os.environ['PATH'] = os.pathsep.join([orig_path,
+                                              os.environ['BIBUTILS_PATH']])
+
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   close_fds=True)
         (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
@@ -182,6 +187,7 @@ class ExternalTransformUtility(object):
         else:
             return _convertToOutputEncoding(result,
                                             output_encoding=output_encoding)
+        os.environ['PATH'] = orig_path
 
     transform = render
 
