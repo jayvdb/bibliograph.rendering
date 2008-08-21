@@ -196,7 +196,7 @@ class ExternalTransformUtility(object):
 
 class BibtexExport(UtilityBaseClass):
 
-    implements(IBibTransformUtility)
+    implements(IBibliographyExport)
 
     __name__ = u'BibTeX'
     source_format = None
@@ -274,7 +274,7 @@ class EndnoteExport(UtilityBaseClass):
     """ Export a bunch of bibliographic entries in endnote format.
     """
 
-    implements(IBibTransformUtility)
+    implements(IBibliographyExport)
 
     __name__ = u'EndNote'
     source_format = u'bib'
@@ -334,7 +334,7 @@ class PdfExport(UtilityBaseClass):
     """ Export a bunch of bibliographic entries in pdf format.
     """
 
-    implements(IBibTransformUtility)
+    implements(IBibliographyExport)
 
     __name__ = u'PDF'
     source_format = u''

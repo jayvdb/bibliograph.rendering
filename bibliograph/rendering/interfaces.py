@@ -28,7 +28,7 @@ class IBibliographyRenderer(Interface):
     def render(resolve_unicode,
                title_force_uppercase,
                msdos_eol_style,
-               **kwargs):
+               output_encoding):
         """ Returns the rendered object(s)
         object may be a bibliography folder, a single, or a list of
         bibliography entries
