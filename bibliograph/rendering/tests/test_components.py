@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from zope.component import getUtility
-from zope.interface import directlyProvides
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 
-from zope.app.container.sample import SampleContainer
-from zope.app.testing import ztapi
-from zope.app.testing.placelesssetup import setUp, tearDown
-
-from bibliograph.core.interfaces import IBibContainerIterator
-from bibliograph.core.interfaces import IBibliographicReference
 from bibliograph.core.interfaces import IBibliographyExport
-from bibliograph.rendering.adapter import Zope2FolderAdapter
 from bibliograph.rendering import interfaces
-from bibliograph.rendering.tests.test_doctests import SimpleContent
 from bibliograph.rendering import utility
 
 class ViewInterfaceTestCase(unittest.TestCase):
