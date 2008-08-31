@@ -44,3 +44,17 @@ First we want no editor, but an author:
   <BLANKLINE>
 
 
+We can also omit some fields:
+
+  >>> request = TestRequest(form=dict(omit_fields=['authors', 'uRl', 'abSTRACT']))
+  >>> view = RisRenderView(context, request)
+  >>> print view()
+  TY  - BOOK
+  PY  - 1985//
+  TI  - A new approach to managing literatüre
+  KW  - Manage Literatür
+  ID  - approach
+  ER  ...
+  <BLANKLINE>
+
+

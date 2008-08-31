@@ -83,3 +83,28 @@ First we want no editor, but an author:
   </modsCollection>
   <BLANKLINE>
 
+We can also omit some fields:
+
+  >>> request = TestRequest(form=dict(omit_fields=['authors', 'uRl', 'abSTRACT']))
+  >>> view = XmlRenderView(context, request)
+  >>> print view()
+  <?xml version="1.0" encoding="UTF-8"?>
+  <modsCollection xmlns="http://www.loc.gov/mods/v3">
+  <mods ID="approach">
+      <titleInfo>
+          <title>A new approach to managing literat&#252;re</title>
+      </titleInfo>
+      <originInfo>
+          <issuance>monographic</issuance>
+          <dateIssued>1985</dateIssued>
+      </originInfo>
+      <typeOfResource>text</typeOfResource>
+      <genre authority="marcgt">book</genre>
+      <subject>
+          <topic>Manage Literat&#252;r</topic>
+      </subject>
+      <identifier type="citekey">approach</identifier>
+  </mods>
+  </modsCollection>
+  <BLANKLINE>
+

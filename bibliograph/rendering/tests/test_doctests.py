@@ -9,14 +9,12 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.app.container.contained import Contained
 from zope.interface import implements
 
-from bibliograph.core.interfaces import IBibContainerIterator
 from bibliograph.core.interfaces import IBibliographicReference
 from bibliograph.core.interfaces import IBibliographyExport
-from bibliograph.rendering.adapter import Zope2FolderAdapter
 from bibliograph.rendering.interfaces import IBibTransformUtility
-from bibliograph.rendering.interfaces import IBibliographyExporter
+from bibliograph.rendering.interfaces import IBibliographyRenderer
 from bibliograph.rendering.renderers.bibtex import BibtexRenderView
-from bibliograph.rendering.utility import BibtexExport
+from bibliograph.rendering.utility import BibtexRenderer
 from bibliograph.rendering.utility import _hasCommands
 from bibliograph.rendering.utility import commands
 
@@ -73,39 +71,16 @@ def setUp(test=None):
     from bibliograph.rendering.renderers.pdf import PdfRenderView
     from bibliograph.rendering.utility import ExternalTransformUtility
     ztapi.provideView(IBibliographicReference, None, None,
-                      name='bibliography.bib',
+                      name=u'reference.bib',
                       factory=BibtexRenderView)
     ztapi.provideView(IBibliographicReference, None, None,
-                      name='bibliography.pdf',
+                      name=u'reference.pdf',
                       factory=PdfRenderView)
 
     ztapi.provideUtility(IBibTransformUtility, ExternalTransformUtility(),
                          name=u'external')
     ztapi.browserViewProviding(None, AbsoluteURL, IAbsoluteURL)
 
-
-class SampleAdapter(Zope2FolderAdapter):
-
-    def prehook(self, entry):
-        print "prehook called!"
-        return entry
-
-    def posthook(self, entry):
-        print "posthook called!"
-
-    def __iter__(self):
-        return iter(self.context.values())
-
-def setUpAdapter(test=None):
-    testing.setUp()
-    ztapi.provideUtility(IBibliographyExporter, BibtexExport(),
-                         name=u'bibtex')
-    ztapi.provideAdapter(IBibliographyExport,
-                         IBibContainerIterator,
-                         SampleAdapter)
-    ztapi.provideView(IBibliographicReference, None, None,
-                      name='bibliography.bib',
-                      factory=BibtexRenderView)
 
 NOBIBUTILSMSG = """One or more transformationtool was not found!
 please make sure bibutils is installed to run all tests. """
@@ -119,7 +94,7 @@ OPTS = doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
 def test_suite():
     utilsavailable = True
     latexavailable = True
-    
+
     suite = unittest.TestSuite()
     suite.addTest(
         doctestunit.DocFileSuite(
@@ -139,9 +114,16 @@ def test_suite():
             optionflags=OPTS,
             ))
 
+    #suite.addTest(doctestunit.DocTestSuite(
+    #        module='bibliograph.rendering.adapter',
+    #        setUp=setUpAdapter,
+    #        tearDown=testing.tearDown,
+    #        optionflags=OPTS,
+    #        ))
+
     suite.addTest(doctestunit.DocTestSuite(
-            module='bibliograph.rendering.adapter',
-            setUp=setUpAdapter,
+            module='bibliograph.rendering.utility',
+            setUp=setUp,
             tearDown=testing.tearDown,
             optionflags=OPTS,
             ))
@@ -171,7 +153,7 @@ def test_suite():
             ))
     else:
         utilsavailable = False
-        
+
     if _hasCommands(commands.get('bib2xml')):
         suite.addTest(doctestunit.DocFileSuite(
             'renderers/xml.txt',
@@ -209,7 +191,7 @@ def test_suite():
     if not utilsavailable:
         print NOBIBUTILSMSG
         print "-" * 20
-        
+
     if not latexavailable:
         print NOLATEXMSG
         print "-" * 20

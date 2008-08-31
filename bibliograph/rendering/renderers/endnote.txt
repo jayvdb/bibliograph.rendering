@@ -43,5 +43,18 @@ First we want no editor, but an author:
   <BLANKLINE>
   <BLANKLINE>
 
+We can also omit some fields:
+
+  >>> request = TestRequest(form=dict(omit_fields=['authors', 'uRl', 'abSTRACT']))
+  >>> view = EndnoteRenderView(context, request)
+  >>> print view()
+  %0 Book
+  %T A new approach to managing literatüre
+  %D 1985
+  %F approach
+  %K Manage Literatür
+  <BLANKLINE>
+  <BLANKLINE>
+
 
 

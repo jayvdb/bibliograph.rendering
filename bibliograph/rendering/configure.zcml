@@ -4,21 +4,22 @@
   xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <include package="bibliograph.core" />
+
   <browser:view
     for="bibliograph.core.interfaces.IBibliographicReference"
-    name="bibliography.bib"
+    name="reference.bib"
     permission="zope2.View"
     class=".renderers.bibtex.BibtexRenderView" />
 
   <browser:view
     for="bibliograph.core.interfaces.IBibliographicReference"
-    name="bibliography.enl"
+    name="reference.enl"
     permission="zope2.View"
     class=".renderers.endnote.EndnoteRenderView" />
 
   <browser:view
     for="bibliograph.core.interfaces.IBibliographicReference"
-    name="bibliography.pdf"
+    name="reference.pdf"
     permission="zope2.View"
     class=".renderers.pdf.PdfRenderView" />
 
@@ -30,13 +31,13 @@
 
   <browser:view
     for="bibliograph.core.interfaces.IBibliographicReference"
-    name="bibliography.xml"
+    name="reference.xml"
     permission="zope2.View"
     class=".renderers.endnote.XmlRenderView" />
 
   <browser:view
     for="bibliograph.core.interfaces.IBibliographicReference"
-    name="bibliography.ris"
+    name="reference.ris"
     permission="zope2.View"
     class=".renderers.endnote.RisRenderView" />
 
@@ -47,100 +48,93 @@
     permission="zope.Public" />
 
   <utility
-    provides=".interfaces.IBibliographyExporter"
-    factory=".utility.BibtexExport"
+    provides=".interfaces.IBibliographyRenderer"
+    factory=".utility.BibtexRenderer"
     name="bibtex"
     permission="zope.Public" />
 
-  <class class=".utility.BibtexExport">
+  <class class=".utility.BibtexRenderer">
 
     <require
       permission="zope2.View"
-      interface=".interfaces.IBibliographyExporter" />
+      interface=".interfaces.IBibliographyRenderer" />
 
     <require
       permission="cmf.ModifyPortalContent"
-      set_schema=".interfaces.IBibliographyExporter" />
+      set_schema=".interfaces.IBibliographyRenderer" />
 
   </class>
 
   <utility
-    provides=".interfaces.IBibliographyExporter"
-    factory=".utility.EndnoteExport"
+    provides=".interfaces.IBibliographyRenderer"
+    factory=".utility.EndnoteRenderer"
     name="endnote"
     permission="zope.Public" />
 
-  <class class=".utility.EndnoteExport">
+  <class class=".utility.EndnoteRenderer">
 
     <require
       permission="zope2.View"
-      interface=".interfaces.IBibliographyExporter" />
+      interface=".interfaces.IBibliographyRenderer" />
 
     <require
       permission="cmf.ModifyPortalContent"
-      set_schema=".interfaces.IBibliographyExporter" />
+      set_schema=".interfaces.IBibliographyRenderer" />
 
   </class>
 
   <utility
-    provides=".interfaces.IBibliographyExporter"
-    factory=".utility.PdfExport"
+    provides=".interfaces.IBibliographyRenderer"
+    factory=".utility.PdfRenderer"
     name="pdf"
     permission="zope.Public" />
 
-  <class class=".utility.PdfExport">
+  <class class=".utility.PdfRenderer">
 
     <require
       permission="zope2.View"
-      interface=".interfaces.IBibliographyExporter" />
+      interface=".interfaces.IBibliographyRenderer" />
 
     <require
       permission="cmf.ModifyPortalContent"
-      set_schema=".interfaces.IBibliographyExporter" />
+      set_schema=".interfaces.IBibliographyRenderer" />
 
   </class>
 
   <utility
-    provides=".interfaces.IBibliographyExporter"
-    factory=".utility.RisExport"
+    provides=".interfaces.IBibliographyRenderer"
+    factory=".utility.RisRenderer"
     name="ris"
     permission="zope.Public" />
 
-  <class class=".utility.RisExport">
+  <class class=".utility.RisRenderer">
 
     <require
       permission="zope2.View"
-      interface=".interfaces.IBibliographyExporter" />
+      interface=".interfaces.IBibliographyRenderer" />
 
     <require
       permission="cmf.ModifyPortalContent"
-      set_schema=".interfaces.IBibliographyExporter" />
+      set_schema=".interfaces.IBibliographyRenderer" />
 
   </class>
 
   <utility
-    provides=".interfaces.IBibliographyExporter"
-    factory=".utility.XmlExport"
+    provides=".interfaces.IBibliographyRenderer"
+    factory=".utility.XmlRenderer"
     name="xml"
     permission="zope.Public" />
 
-  <class class=".utility.XmlExport">
+  <class class=".utility.XmlRenderer">
 
     <require
       permission="zope2.View"
-      interface=".interfaces.IBibliographyExporter" />
+      interface=".interfaces.IBibliographyRenderer" />
 
     <require
       permission="cmf.ModifyPortalContent"
-      set_schema=".interfaces.IBibliographyExporter" />
+      set_schema=".interfaces.IBibliographyRenderer" />
 
   </class>
-
-  <adapter
-      zcml:condition="installed OFS.Folder.Folder"
-      for="OFS.interfaces.IFolder"
-      factory=".adapter.Zope2FolderAdapter"
-      provides="bibliograph.core.interfaces.IBibContainerIterator"
-      />
 
 </configure>

@@ -24,7 +24,8 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 
 # own factory imports
 from bibliograph.core import utils
-from bibliograph.rendering.interfaces import IBibliographyRenderer
+from bibliograph.rendering.interfaces import IReferenceRenderer
+from base import BaseRenderer
 
 ###############################################################################
 
@@ -94,37 +95,27 @@ def clearWorkingDirectory(wd):
 
 ###############################################################################
 
-class PdfRenderView(object):
+class PdfRenderView(BaseRenderer):
     """ A view rendering a bibliography """
 
-    implements(IBibliographyRenderer)
+    implements(IReferenceRenderer)
 
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-    def __call__(self):
-        resolve_unicode = self.request.get('resolve_unicode', False)
-        title_force_uppercase = self.request.get('title_force_uppercase', False)
-        msdos_eol_style = self.request.get('msdos_eol_style', False)
-        output_encoding = self.request.get('output_encoding', 'utf-8')
-        return self.render(resolve_unicode,
-                           title_force_uppercase,
-                           msdos_eol_style,
-                           output_encoding)
+    file_extension = 'pdf'
 
     def render(self, resolve_unicode=False,
                      title_force_uppercase=False,
                      msdos_eol_style=False,
-                     output_encoding=None
+                     output_encoding=None,
+                     omit_fields=[],
                      ):
         """
         renders a BibliographyEntry object in EndNote format
         """
         bibrender = component.queryMultiAdapter((self.context, self.request),
-            name=u'bibliography.bib')
+            name=u'reference.bib')
         source = bibrender.render(output_encoding='latin-1',
-                                  title_force_uppercase=True)
+                                  title_force_uppercase=True,
+                                  omit_fields=omit_fields)
         return self.processSource(source,
             title=utils.title_or_id(self.context),
             url=absoluteURL(self.context, self.request))

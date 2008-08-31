@@ -8,8 +8,8 @@ Add a lightweight content object implementing IBibliographicReference.
 
 Render two documents with the bibtex render utility
 
-  >>> from bibliograph.rendering.utility import BibtexExport
-  >>> print BibtexExport().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> from bibliograph.rendering.utility import BibtexRenderer
+  >>> print BibtexRenderer().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
   <BLANKLINE>
   @Book{approach,
     editor = {Heinz M{\"u}ller},
@@ -35,9 +35,34 @@ Render two documents with the bibtex render utility
 It is possible to capitalize the title by specifying the option
 `title_force_uppercase`.
 
-  >>> print BibtexExport().render([c1, c2],
+  >>> print BibtexRenderer().render([c1, c2],
   ...             title_force_uppercase=True) #doctest: +NORMALIZE_WHITESPACE
   <BLANKLINE>
   @Book{approach,...
   title = {{A} new approach to managing literat{\"u}re},
   ...
+
+It is possible to omit particular fields from the renderer on a per publication-
+type basis. Specifying those fields is case insensitive.
+
+  >>> ofm = {u'Book': ['editor','url']}
+  >>> print BibtexRenderer().render([c1, c2],
+  ...                             omit_fields_mapping=ofm) #doctest: +NORMALIZE_WHITESPACE
+  <BLANKLINE>
+  @Book{approach,
+    authorURLs = {http://www.zope.org},
+    title = {A new approach to managing literat{\"u}re},
+   year = {1985},
+    abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
+    keywords = {Manage Literat{\"u}r}
+  }
+  <BLANKLINE>
+  @Book{approach,
+    authorURLs = {http://www.zope.org},
+    title = {A new approach to managing literat{\"u}re},
+    year = {1985},
+    abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
+    keywords = {Manage Literat{\"u}r}
+  }
+  <BLANKLINE>
+

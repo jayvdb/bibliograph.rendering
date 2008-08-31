@@ -19,7 +19,8 @@ from zope.interface import implements
 
 # own factory imports
 from bibliograph.core import utils
-from bibliograph.rendering.interfaces import IBibliographyRenderer
+from bibliograph.rendering.interfaces import IReferenceRenderer
+from base import BaseRenderer
 
 ###############################################################################
 
@@ -27,69 +28,72 @@ log = logging.getLogger('bibliograph.rendering')
 
 ###############################################################################
 
-class BibtexRenderView(object):
-    """ A view rendering a bibliography """
+class BibtexRenderView(BaseRenderer):
+    """A view rendering an IBibliographicReference to BibTeX.
 
-    implements(IBibliographyRenderer)
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IReferenceRenderer, BibtexRenderView)
+    True
+    """
 
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
+    implements(IReferenceRenderer)
 
-    def __call__(self):
-        resolve_unicode = self.request.get('resolve_unicode', False)
-        title_force_uppercase = self.request.get('title_force_uppercase', False)
-        msdos_eol_style = self.request.get('msdos_eol_style', False)
-        output_encoding = self.request.get('output_encoding', 'utf-8')
-        return self.render(resolve_unicode,
-                           title_force_uppercase,
-                           msdos_eol_style,
-                           output_encoding)
+    file_extension = 'bib'
 
     def render(self, resolve_unicode=False,
                      title_force_uppercase=False,
                      msdos_eol_style=False,
-                     output_encoding=None):
+                     output_encoding=None,
+                     omit_fields=[]):
         """
         renders a BibliographyEntry object in BiBTex format
         """
         entry = self.context
-
+        omit = [each.lower() for each in omit_fields]
         bib_key = utils._validKey(entry)
         bibtex = "\n@%s{%s," % (entry.publication_type, bib_key)
-        if entry.editor_flag:
+        render_authors = self._isRenderableField('editor', omit) and \
+                         self._isRenderableField('authors', omit)
+        if entry.editor_flag and render_authors:
             bibtex += "\n  editor = {%s}," % entry.authors
-        else:
+        elif render_authors:
             bibtex += "\n  author = {%s}," % entry.authors
-        aURLs = utils.AuthorURLs(entry)
-        if aURLs.find('http') > -1:
-            bibtex += "\n  authorURLs = {%s}," % aURLs
-        if title_force_uppercase:
-            bibtex += "\n  title = {%s}," % utils._braceUppercase(entry.title)
-        else:
-            bibtex += "\n  title = {%s}," % entry.title
-        bibtex += "\n  year = {%s}," % entry.publication_year
-        if entry.url: bibtex += "\n  URL = {%s}," % entry.url
-        if entry.abstract:
+        if self._isRenderableField('authorurls', omit):
+            aURLs = utils.AuthorURLs(entry)
+            if aURLs.find('http') > -1:
+                bibtex += "\n  authorURLs = {%s}," % aURLs
+        if self._isRenderableField('title', omit):
+            if title_force_uppercase:
+                bibtex += "\n  title = {%s}," % utils._braceUppercase(entry.title)
+            else:
+                bibtex += "\n  title = {%s}," % entry.title
+        if self._isRenderableField('year', omit):
+            bibtex += "\n  year = {%s}," % entry.publication_year
+        if entry.url and self._isRenderableField('url', omit):
+            bibtex += "\n  URL = {%s}," % entry.url
+        if entry.abstract and self._isRenderableField('abstract', omit):
             bibtex += "\n  abstract = {%s}," % entry.abstract
 
         for key, val in entry.source_fields:
-            if val:
+            if self._isRenderableField(key, omit) and val:
                 if not isinstance(val, unicode):
                     val = utils._decode(val)
                 bibtex += "\n  %s = {%s}," % (key.lower(), val)
 
-        kws = ', '.join(entry.subject)
-        if kws:
-            if not isinstance(kws, unicode):
-                kws = utils._decode(kws)
-            bibtex += "\n  keywords = {%s}," % kws
-        note = getattr(entry, 'note', None)
-        if note:
-            bibtex += "\n  note = {%s}," % note
-        annote = getattr(entry, 'annote', None)
-        if annote:
-            bibtex += "\n  annote = {%s}," % annote
+        if self._isRenderableField('subject', omit):
+            kws = ', '.join(entry.subject)
+            if kws:
+                if not isinstance(kws, unicode):
+                    kws = utils._decode(kws)
+                bibtex += "\n  keywords = {%s}," % kws
+        if self._isRenderableField('note', omit):
+            note = getattr(entry, 'note', None)
+            if note:
+                bibtex += "\n  note = {%s}," % note
+        if self._isRenderableField('annote', omit):
+            annote = getattr(entry, 'annote', None)
+            if annote:
+                bibtex += "\n  annote = {%s}," % annote
         if bibtex[-1] == ',':
             bibtex = bibtex[:-1] # remove the trailing comma
         bibtex += "\n}\n"
@@ -110,5 +114,3 @@ class BibtexRenderView(object):
             return bibtex.encode(output_encoding)
         else:
             return bibtex
-
-

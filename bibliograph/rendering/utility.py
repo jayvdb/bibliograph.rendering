@@ -36,15 +36,17 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 # own factory imports
 from bibliograph.core.encodings import UNICODE_ENCODINGS
 from bibliograph.core.encodings import _python_encodings
+from bibliograph.core.interfaces import IBibliography
 from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.core.interfaces import IBibliographicReference
-from bibliograph.core.interfaces import IBibContainerIterator
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
 from bibliograph.core.utils import _encode
 from bibliograph.core.utils import bin_search
 
 from bibliograph.rendering.interfaces import IBibTransformUtility
+from bibliograph.rendering.interfaces import IReferenceRenderer
+from bibliograph.rendering.interfaces import IBibliographyRenderer
 
 log = logging.getLogger('bibliograph.rendering')
 
@@ -117,6 +119,12 @@ def _getCommand(source_format, target_format, default=_marker):
 ###############################################################################
 
 class ExternalTransformUtility(object):
+    """An implementation of IBibTransformUtility
+
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IBibTransformUtility, ExternalTransformUtility)
+    True
+    """
 
     implements(IBibTransformUtility)
 
@@ -125,7 +133,7 @@ class ExternalTransformUtility(object):
             to 'target_format'
 
             We have nothing, so we do nothing :)
-            >>> if _getCommand('bib', 'end', None) is not None: 
+            >>> if _getCommand('bib', 'end', None) is not None:
             ...     result = ExternalTransformUtility().render('', 'bib', 'end')
             ...     assert result == ''
 
@@ -141,6 +149,8 @@ class ExternalTransformUtility(object):
             We transform the `bib`-format into the `end`-format
             >>> if _hasCommands(commands.get('bib2end')):
             ...     result = ExternalTransformUtility().render(data, 'bib', 'end')
+            ...     # We need to take care of any stray Windows carriage returns.
+            ...     result = result.replace('\r', '')
             ...     assert '''
             ... %0 Book
             ... %A Werner, kla"us title =. H"arry Motter
@@ -159,14 +169,14 @@ class ExternalTransformUtility(object):
         command = _getCommand(source_format, target_format)
         if not command:
             return ''
-        
+
         orig_path = os.environ['PATH']
         if os.environ.has_key('BIBUTILS_PATH'):
             os.environ['PATH'] = os.pathsep.join([orig_path,
                                                   os.environ['BIBUTILS_PATH']])
 
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                  close_fds=True)
+                  close_fds=False)
         (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
         fi.write(_encode(data))
         fi.close()
@@ -194,9 +204,15 @@ class ExternalTransformUtility(object):
 
 ###############################################################################
 
-class BibtexExport(UtilityBaseClass):
+class BibtexRenderer(UtilityBaseClass):
+    """An implementation of IBibliographyRenderer that renders to BibTeX.
 
-    implements(IBibliographyExport)
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IBibliographyRenderer, BibtexRenderer)
+    True
+    """
+
+    implements(IBibliographyRenderer)
 
     __name__ = u'BibTeX'
     source_format = None
@@ -208,73 +224,67 @@ class BibtexExport(UtilityBaseClass):
     available = True
     enabled = True
 
-    def render(self, objects, output_encoding=None,
+    def render(self, objects,
+                     output_encoding=None,
                      title_force_uppercase=False,
-                     msdos_eol_style=False):
+                     msdos_eol_style=False,
+                     omit_fields_mapping={}):
         """ Export a bunch of bibliographic entries in bibex format.
         """
         resolve_unicode = output_encoding not in UNICODE_ENCODINGS
 
-        if not isinstance(objects, (list, tuple)):
-            objects = [objects]
+        #request = getattr(objects[0], 'REQUEST', None)
+        #if request is None:
+        request = TestRequest()
 
-        request = getattr(objects[0], 'REQUEST', None)
-        if request is None:
-            request = TestRequest()
+        try:
+            # Adapt to IBibliography if necessary/possible
+            objects = IBibliography(objects)
+        except TypeError:
+            # If not, it could be ok if `entries' can be iterated over anyway.
+            pass
+        try:
+            # We want the values from a dictionary-ish/IBibliography object
+            entries = objects.itervalues()
+        except AttributeError:
+            # Otherwise we just iterate over what is presumably something
+            # sequence-ish.
+            entries = iter(objects)
+        rendered = []
 
-        if IBibliographyExport.providedBy(objects[0]):
-            entries = IBibContainerIterator(objects[0], [])
-            rendered = []
-            for entry in entries:
-                # call prehook
-                prehook = getattr(entries, 'prehook', None)
-                if callable(prehook): entry = entries.prehook(entry)
+        for obj in entries:
+            ref = IBibliographicReference(obj, None)
+            if ref is None:
+                continue
 
-                adapter = IBibliographicReference(entry, None)
-                if adapter is None: continue
+            # do rendering for entry
+            view = getMultiAdapter((ref, request), name=u'reference.bib')
+            omit_fields = omit_fields_mapping.get(ref.publication_type,
+                                                  [])
+            bibtex_string = view.render(
+                resolve_unicode=resolve_unicode,
+                title_force_uppercase=title_force_uppercase,
+                msdos_eol_style=msdos_eol_style,
+                omit_fields=omit_fields
+                )
+            rendered.append(bibtex_string)
 
-                # do rendering for entry
-                view = getMultiAdapter((adapter, request),
-                                       name=u'bibliography.bib')
-                bibtex_string = view.render(
-                    resolve_unicode=resolve_unicode,
-                    title_force_uppercase=title_force_uppercase,
-                    msdos_eol_style=msdos_eol_style,
-                    )
-                rendered.append(bibtex_string)
+        return _convertToOutputEncoding(''.join(rendered),
+                                        output_encoding=output_encoding)
 
-                # call posthook
-                posthook = getattr(entries, 'posthook', None)
-                if callable(posthook): entries.posthook(entry)
-
-            return _convertToOutputEncoding(''.join(rendered),
-                                            output_encoding=output_encoding)
-
-        # processing a single or a list of BibRef Items
-        else:
-            rendered = []
-            for entry in objects:
-                view = getMultiAdapter((entry, request),
-                                       name=u'bibliography.bib')
-                bibtex = view.render(
-                    resolve_unicode=resolve_unicode,
-                    title_force_uppercase=title_force_uppercase,
-                    msdos_eol_style=msdos_eol_style)
-                rendered.append(bibtex)
-            if output_encoding is not None:
-                return _convertToOutputEncoding(''.join(rendered),
-                                                output_encoding=output_encoding)
-            else:
-                return ''.join(rendered)
-        return ''
 
 ###############################################################################
 
-class EndnoteExport(UtilityBaseClass):
-    """ Export a bunch of bibliographic entries in endnote format.
+class EndnoteRenderer(UtilityBaseClass):
+    """An implementation of IBibliographyRenderer that renders to the Endnote
+    format.
+
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IBibliographyRenderer, EndnoteRenderer)
+    True
     """
 
-    implements(IBibliographyExport)
+    implements(IBibliographyRenderer)
 
     __name__ = u'EndNote'
     source_format = u'bib'
@@ -289,13 +299,14 @@ class EndnoteExport(UtilityBaseClass):
     @property
     def available(self):
         return bool(_getCommand(self.source_format, self.target_format, False))
-        
+
     def render(self, objects, output_encoding=None,
                      title_force_uppercase=False,
-                     msdos_eol_style=False):
+                     msdos_eol_style=False,
+                     omit_fields_mapping={}):
         """ do it
         """
-        source = BibtexExport().render(objects,
+        source = BibtexRenderer().render(objects,
                               output_encoding='iso-8859-1',
                               title_force_uppercase=title_force_uppercase,
                               msdos_eol_style=msdos_eol_style)
@@ -307,9 +318,15 @@ class EndnoteExport(UtilityBaseClass):
 
 ###############################################################################
 
-class RisExport(EndnoteExport):
-    """ Export a bunch of bibliographic entries in ris format.
+class RisRenderer(EndnoteRenderer):
+    """An implementation of IBibliographyRenderer that renders to the RIS
+    format.
+
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IBibliographyRenderer, RisRenderer)
+    True
     """
+
     __name__ = u'RIS'
     target_format = u'ris'
     description = u''
@@ -318,8 +335,13 @@ class RisExport(EndnoteExport):
 
 ###############################################################################
 
-class XmlExport(EndnoteExport):
-    """ Export a bunch of bibliographic entries in xml format.
+class XmlRenderer(EndnoteRenderer):
+    """An implementation of IBibliographyRenderer that renders to the XML (MODS)
+    format.
+
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IBibliographyRenderer, XmlRenderer)
+    True
     """
 
     __name__ = u'XML (MODS)'
@@ -330,11 +352,15 @@ class XmlExport(EndnoteExport):
 
 ###############################################################################
 
-class PdfExport(UtilityBaseClass):
-    """ Export a bunch of bibliographic entries in pdf format.
+class PdfRenderer(UtilityBaseClass):
+    """An implementation of IBibliographyRenderer that renders to a PDF file.
+
+    >>> from zope.interface.verify import verifyClass
+    >>> verifyClass(IBibliographyRenderer, PdfRenderer)
+    True
     """
 
-    implements(IBibliographyExport)
+    implements(IBibliographyRenderer)
 
     __name__ = u'PDF'
     source_format = u''
@@ -349,21 +375,22 @@ class PdfExport(UtilityBaseClass):
     @property
     def available(self):
         return bool(_hasCommands('latex|bibtex|pdflatex'))
-    
+
     def render(self, objects, output_encoding=None,
                      title_force_uppercase=False,
-                     msdos_eol_style=False):
+                     msdos_eol_style=False,
+                     omit_fields_mapping={}):
         """ do it
         """
         if not isinstance(objects, (list, tuple)):
             objects = [objects]
 
-        source = BibtexExport().render(objects,
+        source = BibtexRenderer().render(objects,
                               output_encoding='iso-8859-1',
                               title_force_uppercase=True)
         context = objects[0]
         request = getattr(context, 'REQUEST', TestRequest())
-        view = getMultiAdapter((context, request), name=u'bibliography.pdf')
+        view = getMultiAdapter((context, request), name=u'reference.pdf')
         return view.processSource(source,
                                   title=title_or_id(context),
                                   url=absoluteURL(context, request))
