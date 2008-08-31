@@ -11,12 +11,12 @@ from zope.interface import implements
 
 from bibliograph.core.interfaces import IBibliographicReference
 from bibliograph.core.interfaces import IBibliographyExport
+from bibliograph.core.bibutils import _hasCommands
+from bibliograph.core.bibutils import commands
 from bibliograph.rendering.interfaces import IBibTransformUtility
 from bibliograph.rendering.interfaces import IBibliographyRenderer
 from bibliograph.rendering.renderers.bibtex import BibtexRenderView
 from bibliograph.rendering.utility import BibtexRenderer
-from bibliograph.rendering.utility import _hasCommands
-from bibliograph.rendering.utility import commands
 
 class Name(dict):
 
