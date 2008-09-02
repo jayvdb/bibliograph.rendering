@@ -177,12 +177,10 @@ class BibtexRenderer(UtilityBaseClass):
         #if request is None:
         request = TestRequest()
 
-        try:
-            # Adapt to IBibliography if necessary/possible
-            objects = IBibliography(objects)
-        except TypeError:
-            # If not, it could be ok if `entries' can be iterated over anyway.
-            pass
+        # Adapt to IBibliography if necessary/possible
+        # If not, it could be ok if `entries' can be iterated over anyway.
+        objects = IBibliography(objects, objects)
+        
         try:
             # We want the values from a dictionary-ish/IBibliography object
             entries = objects.itervalues()
