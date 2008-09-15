@@ -1,4 +1,4 @@
-0.2.0 (2008-09-11)
+0.2.0 (2008-09-15)
 ==================
 
  - Moved _getCommand/_hasCommand functions relating to bibutils from bibliograph.rendering to bibliograph.core [tim2p].
