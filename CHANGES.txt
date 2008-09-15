@@ -1,18 +1,26 @@
 0.2.0 (2008-09-15)
 ==================
 
- - Moved _getCommand/_hasCommand functions relating to bibutils from bibliograph.rendering to bibliograph.core [tim2p].
+ - Moved _getCommand/_hasCommand functions relating to bibutils from
+   bibliograph.rendering to bibliograph.core [tim2p].
 
- - Adjust code relating to IBibContainerIterator so that it uses the new IBibliography interface from bibliograph.core, instead [tim2p].
+ - Adjust code relating to IBibContainerIterator so that it uses the new
+   IBibliography interface from bibliograph.core, instead [tim2p].
 
- - Renamed several interfaces so that they are more naturally understood and consistent, i.e. IBibliographyRenderer -> IReferenceRenderer, IBibliographyExporter -> IBibliographyRenderer [tim2p].
+ - Renamed several interfaces so that they are more naturally understood and
+   consistent, i.e. IBibliographyRenderer -> IReferenceRenderer,
+   IBibliographyExporter -> IBibliographyRenderer [tim2p].
 
- - Added an optional `omit_fields` (and `omit_fields_mapping` for the utilities) to renderers so that certain fields will not be rendered [tim2p].
+ - Added an optional `omit_fields` (and `omit_fields_mapping` for the
+   utilities) to renderers so that certain fields will not be rendered
+   [tim2p].
 
- - Adjusted some of the doctests so that they are in the doc strings of implementations rather than separate files so as to keep things a little closer together [tim2p].
+ - Adjusted some of the doctests so that they are in the doc strings of
+   implementations rather than separate files so as to keep things a little
+   closer together [tim2p].
 
- - Adjusted some test code so that it is Windows-aware, i.e. stripping out '\r' from strings before comparing to expected values [tim2p].
-
+ - Adjusted some test code so that it is Windows-aware, i.e. stripping out
+   '\r' from strings before comparing to expected values [tim2p].
 
 0.1.0 (2008-05-02)
 ==================
