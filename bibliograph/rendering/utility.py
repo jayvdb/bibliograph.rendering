@@ -160,6 +160,7 @@ class BibtexRenderer(UtilityBaseClass):
     description = u''
     available_encodings = _python_encodings
     default_encoding = u''
+    view_name = u'reference.bib'
 
     available = True
     enabled = True
@@ -196,7 +197,7 @@ class BibtexRenderer(UtilityBaseClass):
                 continue
 
             # do rendering for entry
-            view = getMultiAdapter((ref, request), name=u'reference.bib')
+            view = getMultiAdapter((ref, request), name=self.view_name)
             omit_fields = omit_fields_mapping.get(ref.publication_type,
                                                   [])
             bibtex_string = view.render(
