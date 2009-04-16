@@ -52,11 +52,10 @@ class BibtexRenderView(BaseRenderer):
         omit = [each.lower() for each in omit_fields]
         bib_key = utils._validKey(entry)
         bibtex = "\n@%s{%s," % (entry.publication_type, bib_key)
-        render_authors = self._isRenderableField('editor', omit) and \
-                         self._isRenderableField('authors', omit)
-        if entry.editor_flag and render_authors:
+
+        if entry.editor_flag and self._isRenderableField('editor', omit):
             bibtex += "\n  editor = {%s}," % entry.authors
-        elif render_authors:
+        elif not entry.editor_flag and self._isRenderableField('authors', omit):
             bibtex += "\n  author = {%s}," % entry.authors
         if self._isRenderableField('authorurls', omit):
             aURLs = utils.AuthorURLs(entry)

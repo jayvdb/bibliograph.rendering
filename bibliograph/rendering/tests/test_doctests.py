@@ -109,20 +109,6 @@ def test_suite():
 
     suite.addTest(doctestunit.DocTestSuite(
             module='bibliograph.rendering.utility',
-            setUp=testing.setUp,
-            tearDown=testing.tearDown,
-            optionflags=OPTS,
-            ))
-
-    #suite.addTest(doctestunit.DocTestSuite(
-    #        module='bibliograph.rendering.adapter',
-    #        setUp=setUpAdapter,
-    #        tearDown=testing.tearDown,
-    #        optionflags=OPTS,
-    #        ))
-
-    suite.addTest(doctestunit.DocTestSuite(
-            module='bibliograph.rendering.utility',
             setUp=setUp,
             tearDown=testing.tearDown,
             optionflags=OPTS,

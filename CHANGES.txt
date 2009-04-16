@@ -1,3 +1,14 @@
+0.2.2 (xxxx-xx-xx)
+==================
+
+  - Fixed author, editor inconsistency in bibtex-renderer [tom_gross]
+
+
+0.2.1 (2008-12-10)
+==================
+
+ - Made bibtex-render view pluggable [tom_gross]
+
 0.2.0 (2008-09-15)
 ==================
 
