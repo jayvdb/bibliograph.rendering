@@ -25,7 +25,7 @@
 
   <browser:view
     for="bibliograph.core.interfaces.IBibliographyExport"
-    name="bibliography.pdf"
+    name="reference.pdf"
     permission="zope2.View"
     class=".renderers.pdf.PdfRenderView" />
 

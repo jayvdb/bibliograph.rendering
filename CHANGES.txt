@@ -2,7 +2,8 @@
 ==================
 
   - Fixed author, editor inconsistency in bibtex-renderer [tom_gross]
-
+  - Fixed name of pdf render-view [tom_gross]
+  -
 
 0.2.1 (2008-12-10)
 ==================
