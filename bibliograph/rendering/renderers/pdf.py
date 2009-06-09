@@ -109,7 +109,7 @@ class PdfRenderView(BaseRenderer):
                      omit_fields=[],
                      ):
         """
-        renders a BibliographyEntry object in EndNote format
+        renders a BibliographyEntry object in PDF format
         """
         bibrender = component.queryMultiAdapter((self.context, self.request),
             name=u'reference.bib')

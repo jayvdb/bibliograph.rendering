@@ -321,13 +321,14 @@ class PdfRenderer(UtilityBaseClass):
                      omit_fields_mapping={}):
         """ do it
         """
-        if not isinstance(objects, (list, tuple)):
-            objects = [objects]
+        if isinstance(objects, (list, tuple)):
+            context = objects[0]
+        else:
+            context = objects
 
         source = BibtexRenderer().render(objects,
                               output_encoding='iso-8859-1',
                               title_force_uppercase=True)
-        context = objects[0]
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')
         return view.processSource(source,

@@ -2,8 +2,9 @@
 ==================
 
   - Fixed author, editor inconsistency in bibtex-renderer [tom_gross]
-  - Fixed name of pdf render-view [tom_gross]
-  -
+  - Fixed name of PDF render-view [tom_gross]
+  - PDF render utility now can be passed a list of objects or a container
+    providing IBibliographyExport [tom_gross]
 
 0.2.1 (2008-12-10)
 ==================
