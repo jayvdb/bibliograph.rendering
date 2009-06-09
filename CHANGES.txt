@@ -1,10 +1,12 @@
-0.2.2 (xxxx-xx-xx)
+0.3 (xxxx-xx-xx)
 ==================
 
   - Fixed author, editor inconsistency in bibtex-renderer [tom_gross]
   - Fixed name of PDF render-view [tom_gross]
   - PDF render utility now can be passed a list of objects or a container
     providing IBibliographyExport [tom_gross]
+  - allow a custom latex-template to be specified when calling `processSource`
+    of PDF render view 
 
 0.2.1 (2008-12-10)
 ==================

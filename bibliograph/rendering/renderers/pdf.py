@@ -138,7 +138,9 @@ class PdfRenderView(BaseRenderer):
         the (LaTeX) source tempalte from the renderer's
         'template' property
         """
-        template = self.getTemplate(**kwargs)
+        template = kwargs.pop('template', None)
+        if template is None:
+            template = self.getTemplate(**kwargs)
         wd = getWorkingDirectory()
         tex_path = os.path.join(wd, 'template.tex')
         bib_path = os.path.join(wd, 'references.bib')
