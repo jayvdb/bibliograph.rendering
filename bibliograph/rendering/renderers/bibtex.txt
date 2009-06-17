@@ -1,5 +1,5 @@
-Bibtext Renderer
-================
+BibTeX Renderer
+===============
 
 Add a lightweight content object implementing IBibliographicReference.
 
