@@ -34,6 +34,7 @@ class BibtexRenderView(BaseRenderer):
     >>> from zope.interface.verify import verifyClass
     >>> verifyClass(IReferenceRenderer, BibtexRenderView)
     True
+
     """
 
     implements(IReferenceRenderer)
@@ -93,6 +94,13 @@ class BibtexRenderView(BaseRenderer):
             annote = getattr(entry, 'annote', None)
             if annote:
                 bibtex += "\n  annote = {%s}," % annote
+        if self._isRenderableField('additional', omit):
+            try:
+                additional = entry.context.getAdditional()
+            except AttributeError:
+                additional = []
+            for mapping in additional:
+                bibtex += "\n  %s = {%s}," % (mapping['key'],mapping['value'])
         if bibtex[-1] == ',':
             bibtex = bibtex[:-1] # remove the trailing comma
         bibtex += "\n}\n"

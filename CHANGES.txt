@@ -1,6 +1,8 @@
 0.3 (xxxx-xx-xx)
 ==================
 
+  - Support additional fields in the bibtex renderer (but special characters 
+    should be avoided in keys as they are escaped) [raphael]
   - Fixed author, editor inconsistency in bibtex-renderer [tom_gross]
   - Fixed name of PDF render-view [tom_gross]
   - PDF render utility now can be passed a list of objects or a container
