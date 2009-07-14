@@ -14,6 +14,7 @@ import logging
 import tempfile
 import os
 import shutil
+from subprocess import Popen, PIPE
 
 # zope imports
 from zope.interface import implements
@@ -60,6 +61,8 @@ DEFAULT_TEMPLATE = r"""
 
 \end{document}
 """
+
+LATEX_OPTS = "-interaction=nonstop"
 
 ###############################################################################
 
@@ -150,10 +153,31 @@ class PdfRenderView(BaseRenderer):
         bib_file.write(source)
         tex_file.close()
         bib_file.close()
-        os.system("cd %s; latex %s"% (wd, tex_path))
-        os.system("cd %s; bibtex %s"% (wd, 'template'))
-        os.system("cd %s; latex %s"% (wd, 'template.tex'))
-        os.system("cd %s; pdflatex %s"% (wd, tex_path))
+
+        p = Popen("cd %s; latex %s %s" % (wd, LATEX_OPTS, tex_path),
+                  stderr=PIPE,
+                  stdout=PIPE,
+                  shell=True)
+        sts = os.waitpid(p.pid, 0)
+
+        p = Popen("cd %s; bibtex %s" % (wd, 'template'),
+                  stdout=PIPE,
+                  stderr=PIPE,
+                  shell=True)
+        sts = os.waitpid(p.pid, 0)
+
+        p = Popen("cd %s; latex %s %s" % (wd, LATEX_OPTS, 'template.tex'),
+                  stdout=PIPE,
+                  stderr=PIPE,
+                  shell=True)
+        sts = os.waitpid(p.pid, 0)
+
+        p = Popen("cd %s; pdflatex %s %s" % (wd, LATEX_OPTS, tex_path),
+                  stdout=PIPE,
+                  stderr=PIPE,
+                  shell=True)
+        sts = os.waitpid(p.pid, 0)
+
         pdf_file= open(os.path.join(wd, "template.pdf"), 'r')
         pdf = pdf_file.read()
         pdf_file.close()
