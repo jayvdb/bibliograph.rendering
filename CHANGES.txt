@@ -8,7 +8,9 @@
   - PDF render utility now can be passed a list of objects or a container
     providing IBibliographyExport [tom_gross]
   - allow a custom latex-template to be specified when calling `processSource`
-    of PDF render view 
+    of PDF render view [tom_gross]
+  - changed os.system calls of latex to subprocess ones [tom_gross]
+  - call pdflatex in nonstopmode [tom_gross]  
 
 0.2.1 (2008-12-10)
 ==================

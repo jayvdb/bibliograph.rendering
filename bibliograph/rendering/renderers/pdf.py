@@ -62,7 +62,7 @@ DEFAULT_TEMPLATE = r"""
 \end{document}
 """
 
-LATEX_OPTS = "-interaction=nonstop"
+LATEX_OPTS = "-interaction=nonstopmode"
 
 ###############################################################################
 
@@ -94,7 +94,6 @@ def clearWorkingDirectory(wd):
         except OSError:
             pass
     os.rmdir(wd)
-
 
 ###############################################################################
 
@@ -154,34 +153,49 @@ class PdfRenderView(BaseRenderer):
         tex_file.close()
         bib_file.close()
 
+        latexlog = []
+
         p = Popen("cd %s; latex %s %s" % (wd, LATEX_OPTS, tex_path),
                   stderr=PIPE,
                   stdout=PIPE,
                   shell=True)
+        (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
+        latexlog.extend([child_stdout.read().strip(),
+                         child_stderr.read().strip()])
 
         p = Popen("cd %s; bibtex %s" % (wd, 'template'),
                   stdout=PIPE,
                   stderr=PIPE,
                   shell=True)
+        (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
-
+        latexlog.extend([child_stdout.read().strip(),
+                         child_stderr.read().strip()])
+        
         p = Popen("cd %s; latex %s %s" % (wd, LATEX_OPTS, 'template.tex'),
                   stdout=PIPE,
                   stderr=PIPE,
                   shell=True)
+        (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
-
+        latexlog.extend([child_stdout.read().strip(),
+                         child_stderr.read().strip()])
+        
         p = Popen("cd %s; pdflatex %s %s" % (wd, LATEX_OPTS, tex_path),
                   stdout=PIPE,
                   stderr=PIPE,
                   shell=True)
+        (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
+        latexlog.extend([child_stdout.read().strip(),
+                         child_stderr.read().strip()])
 
         pdf_file= open(os.path.join(wd, "template.pdf"), 'r')
         pdf = pdf_file.read()
         pdf_file.close()
         clearWorkingDirectory(wd)
+        log.debug('\n'.join(latexlog))
         return pdf
 
 # EOF
