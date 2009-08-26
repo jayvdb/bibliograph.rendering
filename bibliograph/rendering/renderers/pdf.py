@@ -172,7 +172,7 @@ class PdfRenderView(BaseRenderer):
         sts = os.waitpid(p.pid, 0)
         latexlog.extend([child_stdout.read().strip(),
                          child_stderr.read().strip()])
-        
+
         p = Popen("cd %s; latex %s %s" % (wd, LATEX_OPTS, 'template.tex'),
                   stdout=PIPE,
                   stderr=PIPE,
@@ -181,7 +181,7 @@ class PdfRenderView(BaseRenderer):
         sts = os.waitpid(p.pid, 0)
         latexlog.extend([child_stdout.read().strip(),
                          child_stderr.read().strip()])
-        
+
         p = Popen("cd %s; pdflatex %s %s" % (wd, LATEX_OPTS, tex_path),
                   stdout=PIPE,
                   stderr=PIPE,

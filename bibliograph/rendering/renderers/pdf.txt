@@ -41,28 +41,28 @@ At least we got something, looking like a PDF :).
  ... or we can pass a container. The container needs to implement
  `IBibliographyExport` and needs to implement or adapt to `IBibliography`:
 
-Setup the pdf-render view (This is done by zcml normaly.): 
+Setup the pdf-render view (This is done by zcml normaly.):
   >>> from zope.app.testing import ztapi
   >>> from bibliograph.core.interfaces import IBibliographyExport
   >>> ztapi.browserView(IBibliographyExport, 'reference.pdf', PdfRenderView)
- 
+
   >>> from zope.app.container.sample import SampleContainer
   >>> container = SampleContainer()
   >>> setattr(container, '__name__', 'BibContainer')
-  
+
   >>> from zope.interface import alsoProvides
   >>> from bibliograph.core.interfaces import IBibliography
   >>> alsoProvides(container, IBibliography)
   >>> alsoProvides(container, IBibliographyExport)
-  
+
   >>> container['c1'] = c1
   >>> container['c2'] = c2
-  
+
   >>> print PdfRenderer().render(container)
   %PDF-...
   %%EOF
   <BLANKLINE>
-  
-   
-  
+
+
+
 

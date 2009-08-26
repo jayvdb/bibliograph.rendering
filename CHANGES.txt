@@ -1,7 +1,7 @@
-0.3 (xxxx-xx-xx)
-==================
+0.3 (2009-08-26)
+================
 
-  - Support additional fields in the bibtex renderer (but special characters 
+  - Support additional fields in the bibtex renderer (but special characters
     should be avoided in keys as they are escaped) [raphael]
   - Fixed author, editor inconsistency in bibtex-renderer [tom_gross]
   - Fixed name of PDF render-view [tom_gross]
@@ -10,7 +10,7 @@
   - allow a custom latex-template to be specified when calling `processSource`
     of PDF render view [tom_gross]
   - changed os.system calls of latex to subprocess ones [tom_gross]
-  - call pdflatex in nonstopmode [tom_gross]  
+  - call pdflatex in nonstopmode [tom_gross]
 
 0.2.1 (2008-12-10)
 ==================

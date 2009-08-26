@@ -2,7 +2,7 @@
 
 .. bibliograph.rendering
    ---------------------
-   
+
    Package contains renderers for different bibliographic formats. It uses an
    adapter to extract data from Zope/Plone-objects and provides utilities to call
    the renderers. Currently supported formats are: bibtex, endnote, pdf,
