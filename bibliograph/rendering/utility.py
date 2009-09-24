@@ -24,6 +24,7 @@ except ImportError:
 
 # zope3 imports
 from zope.component import getMultiAdapter
+from zope.component import queryAdapter
 from zope.component import getUtility
 from zope.interface import implements
 from zope.publisher.browser import TestRequest
@@ -192,7 +193,12 @@ class BibtexRenderer(UtilityBaseClass):
         rendered = []
 
         for obj in entries:
-            ref = IBibliographicReference(obj, None)
+            ref = queryAdapter(obj, interface=IBibliographicReference,
+                                    name=self.__name__)
+            if ref is None:
+                # if there is no named adapter, get the default adapter
+                # compatibility with older versions
+                ref = IBibliographicReference(obj, None)
             if ref is None:
                 continue
 

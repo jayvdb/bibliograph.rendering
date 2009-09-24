@@ -1,7 +1,7 @@
 0.4 (unreleased)
 ================
 
-  -
+  - Added a named adapter for IBibliographicReference
 
 0.3 (2009-08-26)
 ================
