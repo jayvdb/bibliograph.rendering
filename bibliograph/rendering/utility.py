@@ -247,7 +247,8 @@ class EndnoteRenderer(UtilityBaseClass):
         source = BibtexRenderer().render(objects,
                               output_encoding='utf-8',
                               title_force_uppercase=title_force_uppercase,
-                              msdos_eol_style=msdos_eol_style)
+                              msdos_eol_style=msdos_eol_style,
+                              omit_fields_mapping=omit_fields_mapping)
         transform = getUtility(IBibTransformUtility, name=u"external")
         out = transform.render(source,
                                self.source_format,
@@ -330,7 +331,8 @@ class PdfRenderer(UtilityBaseClass):
 
         source = BibtexRenderer().render(objects,
                               output_encoding='utf8',
-                              title_force_uppercase=True)
+                              title_force_uppercase=True,
+                              omit_fields_mapping=omit_fields_mapping)
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')
         return view.processSource(source,
