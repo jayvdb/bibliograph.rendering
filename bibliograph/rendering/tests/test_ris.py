@@ -43,7 +43,8 @@ class TestRisRenderer(BaseRendererTestCase):
         out2 = renderer.render([ref]).strip()
         self.failUnless(source2 == out2)
         source3 = self.readFile(setup.SOURCE3_RIS).strip()
-        out3 = renderer.render([ref], omit_fields=['authors', 'uRl', 'abSTRACT']).strip()
+        ofmapping = {u'Book' : ['authors', 'uRl', 'abSTRACT']}
+        out3 = renderer.render([ref], omit_fields_mapping=ofmapping).strip()
         self.failUnless(source3 == out3)
 
 
