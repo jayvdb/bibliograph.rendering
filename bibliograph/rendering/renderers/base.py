@@ -7,7 +7,7 @@ class BaseRenderer(object):
         self.request = request
 
     def __call__(self):
-        resolve_unicode = self.request.get('resolve_unicode', False)
+        resolve_unicode = self.request.get('resolve_unicode', True)
         title_force_uppercase = self.request.get('title_force_uppercase', False)
         msdos_eol_style = self.request.get('msdos_eol_style', False)
         output_encoding = self.request.get('output_encoding', 'utf-8')

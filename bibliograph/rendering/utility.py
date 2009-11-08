@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 ###############################################################################
 # $Copy$
 ###############################################################################
@@ -12,8 +12,10 @@ __author__  = 'Tom Gross <itconsense@gmail.com>'
 
 # python imports
 import os
-from subprocess import Popen, PIPE
+from subprocess import Popen
+from subprocess import PIPE
 import logging
+import codecs
 
 # zope2 imports
 try:
@@ -114,16 +116,8 @@ class ExternalTransformUtility(object):
         if os.environ.has_key('BIBUTILS_PATH'):
             os.environ['PATH'] = os.pathsep.join([orig_path,
                                                   os.environ['BIBUTILS_PATH']])
-
-        p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                  close_fds=False)
-        (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
-        fi.write(_encode(data))
-        fi.close()
-        result = fo.read()
-        fo.close()
-        error = fe.read()
-        fe.close()
+        p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
+        result, error = p.communicate(data.encode('utf-8'))
         if error:
             # command could be like 'ris2xml', or 'ris2xml | xml2bib'. It
             # seems unlikely, but we'll code for an arbitrary number of
@@ -133,12 +127,15 @@ class ExternalTransformUtility(object):
                 if each in error and not result:
                     log.error("'%s' not found. Make sure 'bibutils' is installed.",
                               command)
+        result = result.decode('utf-8')
+        # Strip the BOM from the beginning of the Unicode string, if it exists
+        result = result.lstrip( unicode( codecs.BOM_UTF8, "utf8" ) )
+        os.environ['PATH'] = orig_path
         if output_encoding is None:
             return result
         else:
             return _convertToOutputEncoding(result,
                                             output_encoding=output_encoding)
-        os.environ['PATH'] = orig_path
 
     transform = render
 
@@ -166,13 +163,15 @@ class BibtexRenderer(UtilityBaseClass):
     enabled = True
 
     def render(self, objects,
+                     resolve_unicode=True,
                      output_encoding=None,
                      title_force_uppercase=False,
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
         """ Export a bunch of bibliographic entries in bibex format.
         """
-        resolve_unicode = output_encoding not in UNICODE_ENCODINGS
+        if resolve_unicode is None:
+            resolve_unicode = output_encoding not in UNICODE_ENCODINGS
 
         #request = getattr(objects[0], 'REQUEST', None)
         #if request is None:
@@ -246,14 +245,17 @@ class EndnoteRenderer(UtilityBaseClass):
         """ do it
         """
         source = BibtexRenderer().render(objects,
-                              output_encoding='iso-8859-1',
+                              output_encoding='utf-8',
                               title_force_uppercase=title_force_uppercase,
                               msdos_eol_style=msdos_eol_style)
         transform = getUtility(IBibTransformUtility, name=u"external")
-        return transform.render(source,
-                                self.source_format,
-                                self.target_format,
-                                output_encoding)
+        out = transform.render(source,
+                               self.source_format,
+                               self.target_format,
+                               output_encoding)
+        if msdos_eol_style is False:
+            out = out.replace('\r\n', '\n').replace('\r', '\n')
+        return out
 
 ###############################################################################
 
@@ -327,7 +329,7 @@ class PdfRenderer(UtilityBaseClass):
             context = objects
 
         source = BibtexRenderer().render(objects,
-                              output_encoding='iso-8859-1',
+                              output_encoding='utf8',
                               title_force_uppercase=True)
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')

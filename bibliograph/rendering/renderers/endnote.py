@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 ###############################################################################
 # $Copy$
 ###############################################################################
@@ -51,20 +51,20 @@ class EndnoteRenderView(BaseRenderer):
                      omit_fields=[]
                      ):
         """
-        renders a BibliographyEntry object in EndNote format
+        Renders a BibliographyEntry object in EndNote format.
         """
         bibrender = component.queryMultiAdapter((self.context, self.request),
             name=u'reference.bib')
         source = bibrender.render(msdos_eol_style=msdos_eol_style,
                                   resolve_unicode=True,
-                                  output_encoding='ascii',
+                                  output_encoding='utf-8',
                                   omit_fields=omit_fields
                                   )
-
         transform = component.getUtility(IBibTransformUtility,
                                          name=u"external")
-        return transform.render(
+        out = transform.render(
             source, self.source_format, self.target_format, output_encoding)
+        return out
 
 ###############################################################################
 

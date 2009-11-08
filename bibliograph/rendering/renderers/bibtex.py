@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 ###############################################################################
 # $Copy$
 ###############################################################################
@@ -104,17 +104,9 @@ class BibtexRenderView(BaseRenderer):
         if bibtex[-1] == ',':
             bibtex = bibtex[:-1] # remove the trailing comma
         bibtex += "\n}\n"
+        #bibtex = bibtex.encode('utf-8')
         bibtex = utils._normalize(bibtex, resolve_unicode=resolve_unicode)
-
-        # leave these lines to debug _utf8enc2latex_mapping problems (for now)
-        try:
-            if resolve_unicode: debug = utils._decode(bibtex).encode('latin-1')
-        except UnicodeEncodeError:
-            log.error(
-                'UnicodeEncodeError (latin-1): caused by object with ID: %s',
-                bib_key
-                )
-
+        #bibtex = bibtex.decode('utf-8')
         if msdos_eol_style:
             bibtex = bibtex.replace('\n', '\r\n')
         if output_encoding is not None:
