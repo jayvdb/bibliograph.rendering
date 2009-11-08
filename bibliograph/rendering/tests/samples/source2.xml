@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="approach">
+    <titleInfo>
+        <title>A new approach to managing literatüre</title>
+    </titleInfo>
+    <name type="personal">
+        <namePart type="given">Heinz</namePart>
+        <namePart type="family">Müller</namePart>
+        <role>
+            <roleTerm authority="marcrelator" type="text">author</roleTerm>
+        </role>
+    </name>
+    <originInfo>
+        <issuance>monographic</issuance>
+        <dateIssued>1985</dateIssued>
+    </originInfo>
+    <typeOfResource>text</typeOfResource>
+    <genre authority="marcgt">book</genre>
+    <abstract>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</abstract>
+    <subject>
+        <topic>Manage Literatür</topic>
+    </subject>
+    <identifier type="citekey">approach</identifier>
+    <location>
+        <url>http://www.books.com/approach</url>
+    </location>
+</mods>
+</modsCollection>

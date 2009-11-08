@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="approach">
+    <titleInfo>
+        <title>A new approach to managing literatüre</title>
+    </titleInfo>
+    <originInfo>
+        <issuance>monographic</issuance>
+        <dateIssued>1985</dateIssued>
+    </originInfo>
+    <typeOfResource>text</typeOfResource>
+    <genre authority="marcgt">book</genre>
+    <subject>
+        <topic>Manage Literatür</topic>
+    </subject>
+    <identifier type="citekey">approach</identifier>
+</mods>
+</modsCollection>
