@@ -2,11 +2,11 @@
 <modsCollection xmlns="http://www.loc.gov/mods/v3">
 <mods ID="approach">
     <titleInfo>
-        <title>A new approach to managing literatüre</title>
+        <title>A new approach to managing literat&#252;re</title>
     </titleInfo>
     <name type="personal">
         <namePart type="given">Heinz</namePart>
-        <namePart type="family">Müller</namePart>
+        <namePart type="family">M&#252;ller</namePart>
         <role>
             <roleTerm authority="marcrelator" type="text">author</roleTerm>
         </role>
@@ -19,7 +19,7 @@
     <genre authority="marcgt">book</genre>
     <abstract>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</abstract>
     <subject>
-        <topic>Manage Literatür</topic>
+        <topic>Manage Literat&#252;r</topic>
     </subject>
     <identifier type="citekey">approach</identifier>
     <location>

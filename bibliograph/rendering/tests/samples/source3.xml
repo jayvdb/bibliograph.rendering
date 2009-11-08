@@ -2,7 +2,7 @@
 <modsCollection xmlns="http://www.loc.gov/mods/v3">
 <mods ID="approach">
     <titleInfo>
-        <title>A new approach to managing literatüre</title>
+        <title>A new approach to managing literat&#252;re</title>
     </titleInfo>
     <originInfo>
         <issuance>monographic</issuance>
@@ -11,7 +11,7 @@
     <typeOfResource>text</typeOfResource>
     <genre authority="marcgt">book</genre>
     <subject>
-        <topic>Manage Literatür</topic>
+        <topic>Manage Literat&#252;r</topic>
     </subject>
     <identifier type="citekey">approach</identifier>
 </mods>
