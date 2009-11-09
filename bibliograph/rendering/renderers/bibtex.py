@@ -47,21 +47,17 @@ class BibtexRenderView(BaseRenderer):
                      output_encoding=None,
                      omit_fields=[]):
         """
-        renders a BibliographyEntry object in BiBTex format
+        Renders a BibliographyEntry object in BiBTex format.
         """
         entry = self.context
         omit = [each.lower() for each in omit_fields]
         bib_key = utils._validKey(entry)
         bibtex = "\n@%s{%s," % (entry.publication_type, bib_key)
 
-        if entry.editor_flag and self._isRenderableField('editor', omit):
-            bibtex += "\n  editor = {%s}," % entry.authors
-        elif not entry.editor_flag and self._isRenderableField('authors', omit):
-            bibtex += "\n  author = {%s}," % entry.authors
-        if self._isRenderableField('authorurls', omit):
-            aURLs = utils.AuthorURLs(entry)
-            if aURLs.find('http') > -1:
-                bibtex += "\n  authorURLs = {%s}," % aURLs
+        if hasattr(entry, 'editors') and self._isRenderableField('editors', omit):
+            bibtex += "\n  editor = {%s}," % self._renderAuthors(entry.editors)
+        if self._isRenderableField('authors', omit):
+            bibtex += "\n  author = {%s}," % self._renderAuthors(entry.authors)
         if self._isRenderableField('title', omit):
             if title_force_uppercase:
                 bibtex += "\n  title = {%s}," % utils._braceUppercase(entry.title)
@@ -73,12 +69,6 @@ class BibtexRenderView(BaseRenderer):
             bibtex += "\n  URL = {%s}," % entry.url
         if entry.abstract and self._isRenderableField('abstract', omit):
             bibtex += "\n  abstract = {%s}," % entry.abstract
-
-        for key, val in entry.source_fields:
-            if self._isRenderableField(key, omit) and val:
-                if not isinstance(val, unicode):
-                    val = utils._decode(val)
-                bibtex += "\n  %s = {%s}," % (key.lower(), val)
 
         if self._isRenderableField('subject', omit):
             kws = ', '.join(entry.subject)
@@ -94,13 +84,6 @@ class BibtexRenderView(BaseRenderer):
             annote = getattr(entry, 'annote', None)
             if annote:
                 bibtex += "\n  annote = {%s}," % annote
-        if self._isRenderableField('additional', omit):
-            try:
-                additional = entry.context.getAdditional()
-            except AttributeError:
-                additional = []
-            for mapping in additional:
-                bibtex += "\n  %s = {%s}," % (mapping['key'],mapping['value'])
         if bibtex[-1] == ',':
             bibtex = bibtex[:-1] # remove the trailing comma
         bibtex += "\n}\n"
@@ -113,3 +96,12 @@ class BibtexRenderView(BaseRenderer):
             return bibtex.encode(output_encoding)
         else:
             return bibtex
+
+    def _renderAuthors(self, authors):
+        out = []
+        tmp = '{%s} {%s} {%s}'
+        for au in authors:
+            out.append(tmp % (au.firstname, au.middlename, au.lastname))
+        s = ' and '.join(out)
+        s = s.replace('{} ', '')
+        return s
