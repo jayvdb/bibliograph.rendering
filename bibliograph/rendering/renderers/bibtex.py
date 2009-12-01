@@ -102,11 +102,12 @@ class BibtexRenderView(BaseRenderer):
             for mapping in additional:
                 bibtex += "\n  %s = {%s}," % (mapping['key'],mapping['value'])
 
-        for d in entry.context.getIdentifiers():
-            label = d['label'].lower()
-            value = d.get('value')
-            if value:
-                bibtex += "\n  %s = {%s}," % (label, value)
+        if entry.context and self._haveIdentifiers(entry.context):
+            for d in entry.context.getIdentifiers():
+                label = d['label'].lower()
+                value = d.get('value')
+                if value:
+                    bibtex += "\n  %s = {%s}," % (label, value)
 
         if bibtex[-1] == ',':
             bibtex = bibtex[:-1] # remove the trailing comma

@@ -36,6 +36,7 @@ class SimpleContent(Contained, dict):
     editor_flag = True
     source_fields = []
     field_values = []
+    context = None
     __name__ = 'approach'
 
     title = u'A new approach to managing literatüre'

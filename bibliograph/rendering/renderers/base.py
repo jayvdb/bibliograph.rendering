@@ -28,3 +28,5 @@ class BaseRenderer(object):
             return False
         return True
 
+    def _haveIdentifiers(self, ref):
+        return 'identifiers' in ref.Schema().keys()
