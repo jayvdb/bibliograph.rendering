@@ -1,3 +1,7 @@
+0.4.0 (unreleased)
+=================
+  - identifier export support for BibTeX
+
 0.3.1 (2009-09-24)
 ==================
 
