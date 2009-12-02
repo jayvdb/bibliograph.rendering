@@ -46,6 +46,7 @@ class SimpleContent(Contained, dict):
     note = u''
     annote = u''
     url = u"http://www.books.com/approach"
+    identifiers = dict()
 
     @property
     def authors(self):
