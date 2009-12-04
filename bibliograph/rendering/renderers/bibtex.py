@@ -102,7 +102,10 @@ class BibtexRenderView(BaseRenderer):
             for mapping in additional:
                 bibtex += "\n  %s = {%s}," % (mapping['key'],mapping['value'])
 
-        for k,v in entry.identifiers.items():
+        keys = entry.identifiers.keys()
+        keys.sort()
+        for k in keys:
+            v = entry.identifiers[k]
             if v:
                 bibtex += "\n  %s = {%s}," % (k.lower(), v)
 
