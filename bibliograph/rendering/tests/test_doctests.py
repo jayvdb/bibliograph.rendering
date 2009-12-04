@@ -36,6 +36,7 @@ class SimpleContent(Contained, dict):
     editor_flag = True
     source_fields = []
     field_values = []
+    context = None
     __name__ = 'approach'
 
     title = u'A new approach to managing literatüre'
@@ -45,6 +46,7 @@ class SimpleContent(Contained, dict):
     note = u''
     annote = u''
     url = u"http://www.books.com/approach"
+    identifiers = dict(isbn='1234567890', doi='0987654321')
 
     @property
     def authors(self):

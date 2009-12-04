@@ -18,11 +18,11 @@ Call the EndNote render view
   <modsCollection xmlns="http://www.loc.gov/mods/v3">
   <mods ID="approach">
       <titleInfo>
-          <title>A new approach to managing literat&#252;re</title>
+          <title>A new approach to managing literatüre</title>
       </titleInfo>
       <name type="personal">
           <namePart type="given">Heinz</namePart>
-          <namePart type="family">M&#252;ller</namePart>
+          <namePart type="family">Müller</namePart>
           <role>
               <roleTerm authority="marcrelator" type="text">editor</roleTerm>
           </role>
@@ -35,9 +35,11 @@ Call the EndNote render view
       <genre authority="marcgt">book</genre>
       <abstract>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</abstract>
       <subject>
-          <topic>Manage Literat&#252;r</topic>
+          <topic>Manage Literatür</topic>
       </subject>
+      <identifier type="isbn">1234567890</identifier>
       <identifier type="citekey">approach</identifier>
+      <identifier type="doi">0987654321</identifier>
       <location>
           <url>http://www.books.com/approach</url>
       </location>
@@ -56,11 +58,11 @@ First we want no editor, but an author:
   <modsCollection xmlns="http://www.loc.gov/mods/v3">
   <mods ID="approach">
       <titleInfo>
-          <title>A new approach to managing literat&#252;re</title>
+          <title>A new approach to managing literatüre</title>
       </titleInfo>
       <name type="personal">
           <namePart type="given">Heinz</namePart>
-          <namePart type="family">M&#252;ller</namePart>
+          <namePart type="family">Müller</namePart>
           <role>
               <roleTerm authority="marcrelator" type="text">author</roleTerm>
           </role>
@@ -73,9 +75,11 @@ First we want no editor, but an author:
       <genre authority="marcgt">book</genre>
       <abstract>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</abstract>
       <subject>
-          <topic>Manage Literat&#252;r</topic>
+          <topic>Manage Literatür</topic>
       </subject>
+      <identifier type="isbn">1234567890</identifier>
       <identifier type="citekey">approach</identifier>
+      <identifier type="doi">0987654321</identifier>
       <location>
           <url>http://www.books.com/approach</url>
       </location>
@@ -92,7 +96,7 @@ We can also omit some fields:
   <modsCollection xmlns="http://www.loc.gov/mods/v3">
   <mods ID="approach">
       <titleInfo>
-          <title>A new approach to managing literat&#252;re</title>
+          <title>A new approach to managing literatüre</title>
       </titleInfo>
       <originInfo>
           <issuance>monographic</issuance>
@@ -101,9 +105,11 @@ We can also omit some fields:
       <typeOfResource>text</typeOfResource>
       <genre authority="marcgt">book</genre>
       <subject>
-          <topic>Manage Literat&#252;r</topic>
+          <topic>Manage Literatür</topic>
       </subject>
+      <identifier type="isbn">1234567890</identifier>
       <identifier type="citekey">approach</identifier>
+      <identifier type="doi">0987654321</identifier>
   </mods>
   </modsCollection>
   <BLANKLINE>

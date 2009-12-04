@@ -101,6 +101,14 @@ class BibtexRenderView(BaseRenderer):
                 additional = []
             for mapping in additional:
                 bibtex += "\n  %s = {%s}," % (mapping['key'],mapping['value'])
+
+        keys = entry.identifiers.keys()
+        keys.sort()
+        for k in keys:
+            v = entry.identifiers[k]
+            if v:
+                bibtex += "\n  %s = {%s}," % (k.lower(), v)
+
         if bibtex[-1] == ',':
             bibtex = bibtex[:-1] # remove the trailing comma
         bibtex += "\n}\n"
