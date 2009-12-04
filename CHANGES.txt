@@ -1,5 +1,5 @@
-0.4.0 (unreleased)
-=================
+0.4.0 (2009-12-04)
+==================
   - identifier import/export support for BibTeX
   - various fixes and cleanup
   - Bibutils 4.6 is now a minimum requirement
