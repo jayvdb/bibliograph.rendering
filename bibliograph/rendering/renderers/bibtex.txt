@@ -28,7 +28,9 @@ Call the view
     year = {1985},
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
-    keywords = {Manage Literat{\"u}r}
+    keywords = {Manage Literat{\"u}r},
+    doi = {0987654321},
+    isbn = {1234567890}
   }
   <BLANKLINE>
 
@@ -47,7 +49,9 @@ First we want no editor, but an author:
     year = {1985},
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
-    keywords = {Manage Literat{\"u}r}
+    keywords = {Manage Literat{\"u}r},
+    doi = {0987654321},
+    isbn = {1234567890}
   }
   <BLANKLINE>
 
@@ -67,7 +71,9 @@ See if we can include some additional fields:
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
     foobar = {Foo Bar},
-    keywords = {Manage Literat{\"u}r}
+    keywords = {Manage Literat{\"u}r},
+    doi = {0987654321},
+    isbn = {1234567890}
   }
   <BLANKLINE>
 
@@ -84,7 +90,9 @@ We can omit fields, as well:
     authorURLs = {http://www.zope.org},
     title = {A new approach to managing literat{\"u}re},
     URL = {http://www.books.com/approach},
-    keywords = {Manage Literat{\"u}r}
+    keywords = {Manage Literat{\"u}r},
+    doi = {0987654321},
+    isbn = {1234567890}
   }
   <BLANKLINE>
 
@@ -104,7 +112,9 @@ try with utf-8
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
     foobar = {Foo Bar},
-    keywords = {Manage Literatür}
+    keywords = {Manage Literatür},
+    doi = {0987654321},
+    isbn = {1234567890}
   }
   <BLANKLINE>
 
