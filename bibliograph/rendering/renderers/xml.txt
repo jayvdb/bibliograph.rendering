@@ -37,7 +37,9 @@ Call the EndNote render view
       <subject>
           <topic>Manage Literat&#252;r</topic>
       </subject>
+      <identifier type="isbn">1234567890</identifier>
       <identifier type="citekey">approach</identifier>
+      <identifier type="doi">0987654321</identifier>
       <location>
           <url>http://www.books.com/approach</url>
       </location>
@@ -75,7 +77,9 @@ First we want no editor, but an author:
       <subject>
           <topic>Manage Literat&#252;r</topic>
       </subject>
+      <identifier type="isbn">1234567890</identifier>
       <identifier type="citekey">approach</identifier>
+      <identifier type="doi">0987654321</identifier>
       <location>
           <url>http://www.books.com/approach</url>
       </location>
@@ -103,7 +107,9 @@ We can also omit some fields:
       <subject>
           <topic>Manage Literat&#252;r</topic>
       </subject>
+      <identifier type="isbn">1234567890</identifier>
       <identifier type="citekey">approach</identifier>
+      <identifier type="doi">0987654321</identifier>
   </mods>
   </modsCollection>
   <BLANKLINE>
