@@ -109,7 +109,7 @@ class BibtexRenderView(BaseRenderer):
             if v:
                 bibtex += "\n  %s = {%s}," % (k.lower(), v)
 
-        if bibtex[-1] == ',':
+        if bibtex.endswith(','):
             bibtex = bibtex[:-1] # remove the trailing comma
         bibtex += "\n}\n"
         bibtex = utils._normalize(bibtex, resolve_unicode=resolve_unicode)
