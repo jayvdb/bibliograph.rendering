@@ -1,3 +1,9 @@
+0.4.1 (2009-12-0r)
+==================
+ 
+  - fixed some tests related to the new unicode -> TeX
+    mapping table of bibliograph.core
+
 0.4.0 (2009-12-04)
 ==================
   - identifier import/export support for BibTeX

@@ -104,10 +104,12 @@ class BibtexRenderView(BaseRenderer):
 
         keys = entry.identifiers.keys()
         keys.sort()
+        source_fields_keys = [tp[0].lower() for tp in entry.source_fields]
         for k in keys:
             v = entry.identifiers[k]
             if v:
-                bibtex += "\n  %s = {%s}," % (k.lower(), v)
+                if not k.lower() in source_fields_keys:
+                    bibtex += "\n  %s = {%s}," % (k.lower(), v)
 
         if bibtex.endswith(','):
             bibtex = bibtex[:-1] # remove the trailing comma

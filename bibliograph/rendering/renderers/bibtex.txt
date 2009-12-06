@@ -22,13 +22,13 @@ Call the view
   >>> print view()
   <BLANKLINE>
   @Book{approach,
-    editor = {Heinz M{\"u}ller},
+    editor = {Heinz M{\"{u}}ller},
     authorURLs = {http://www.zope.org},
-    title = {A new approach to managing literat{\"u}re},
+    title = {A new approach to managing literat{\"{u}}re},
     year = {1985},
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
-    keywords = {Manage Literat{\"u}r},
+    keywords = {Manage Literat{\"{u}}r},
     doi = {0987654321},
     isbn = {1234567890}
   }
@@ -43,13 +43,13 @@ First we want no editor, but an author:
   >>> print view()
   <BLANKLINE>
   @Book{approach,
-    author = {Heinz M{\"u}ller},
+    author = {Heinz M{\"{u}}ller},
     authorURLs = {http://www.zope.org},
-    title = {A new approach to managing literat{\"u}re},
+    title = {A new approach to managing literat{\"{u}}re},
     year = {1985},
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
-    keywords = {Manage Literat{\"u}r},
+    keywords = {Manage Literat{\"{u}}r},
     doi = {0987654321},
     isbn = {1234567890}
   }
@@ -64,14 +64,14 @@ See if we can include some additional fields:
   >>> print view()
   <BLANKLINE>
   @Book{approach,
-    editor = {Heinz M{\"u}ller},
+    editor = {Heinz M{\"{u}}ller},
     authorURLs = {http://www.zope.org},
-    title = {A new approach to managing literat{\"u}re},
+    title = {A new approach to managing literat{\"{u}}re},
     year = {1985},
     URL = {http://www.books.com/approach},
     abstract = {Lorem ipsum dolor sit amet, consectetuer adipiscing elit.},
     foobar = {Foo Bar},
-    keywords = {Manage Literat{\"u}r},
+    keywords = {Manage Literat{\"{u}}r},
     doi = {0987654321},
     isbn = {1234567890}
   }
@@ -86,11 +86,11 @@ We can omit fields, as well:
   >>> print view()
   <BLANKLINE>
   @Book{approach,
-    editor = {Heinz M{\"u}ller},
+    editor = {Heinz M{\"{u}}ller},
     authorURLs = {http://www.zope.org},
-    title = {A new approach to managing literat{\"u}re},
+    title = {A new approach to managing literat{\"{u}}re},
     URL = {http://www.books.com/approach},
-    keywords = {Manage Literat{\"u}r},
+    keywords = {Manage Literat{\"{u}}r},
     doi = {0987654321},
     isbn = {1234567890}
   }
