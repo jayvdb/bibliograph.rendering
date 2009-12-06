@@ -14,6 +14,7 @@ import logging
 import tempfile
 import os
 import shutil
+import codecs
 from subprocess import Popen, PIPE
 
 # zope imports
@@ -140,14 +141,26 @@ class PdfRenderView(BaseRenderer):
         the (LaTeX) source tempalte from the renderer's
         'template' property
         """
+
+        
         template = kwargs.pop('template', None)
         if template is None:
             template = self.getTemplate(**kwargs)
         wd = getWorkingDirectory()
         tex_path = os.path.join(wd, 'template.tex')
         bib_path = os.path.join(wd, 'references.bib')
-        tex_file = open(tex_path, 'w')
-        bib_file = open(bib_path, 'w')
+        tex_file = file(tex_path, 'w')
+        # 'source' is a unicode string which should contain non-ascii
+        # characters escaped (TeX notation). However the encoding.py module
+        # only provides a minimal mapping (unicode -> TeX notation) - especially
+        # it lacks support for greek characters. This will lead to the situation
+        # that the BibTeX source file contains non-asci chars..this will lead
+        # to Unicode decoding errors on the storage layer. As a workaround we
+        # use the codecs module and instruct it to replace non-convertable
+        # characters. A better solution would be to generated a utf-8 encoding
+        # TeX template.tex file supporting UTF-8 directly on the TeX level.
+        # {ajung)
+        bib_file = codecs.open(bib_path, 'w', encoding='ascii', errors='replace')
         tex_file.write(template)
         bib_file.write(source)
         tex_file.close()
