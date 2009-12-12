@@ -41,6 +41,7 @@ class SimpleContent(Contained, dict):
 
     title = u'A new approach to managing literatüre'
     publication_year = 1985
+    publication_month = ''
     abstract = u'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
     subject = [u'Manage Literatür']
     note = u''
