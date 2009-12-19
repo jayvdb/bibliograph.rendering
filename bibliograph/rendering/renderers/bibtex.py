@@ -71,7 +71,7 @@ class BibtexRenderView(BaseRenderer):
             bibtex += "\n  year = {%s}," % entry.publication_year
         if self._isRenderableField('month', omit):
             if entry.publication_month:
-                bibtex += "\n  month = %s," % entry.publication_month
+                bibtex += "\n  month = {%s}," % entry.publication_month
         if entry.url and self._isRenderableField('url', omit):
             bibtex += "\n  URL = {%s}," % entry.url
         if entry.abstract and self._isRenderableField('abstract', omit):

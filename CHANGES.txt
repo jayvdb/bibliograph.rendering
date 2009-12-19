@@ -1,8 +1,3 @@
-0.4.3 (unreleased)
-==================
-
-  - BibTeX export: generating month = Jan instead of 
-    month = {Jan}
 
 0.4.2 (2009-12-12)
 ==================
