@@ -116,7 +116,7 @@ class PdfRenderView(BaseRenderer):
         """
         bibrender = component.queryMultiAdapter((self.context, self.request),
             name=u'reference.bib')
-        source = bibrender.render(output_encoding='latin-1',
+        source = bibrender.render(output_encoding='iso-8859-15',
                                   title_force_uppercase=True,
                                   omit_fields=omit_fields)
         return self.processSource(source,
@@ -130,7 +130,7 @@ class PdfRenderView(BaseRenderer):
                       'url': ''}
             for key, val in kwargs.items():
                 values[key] = unicode(utils._normalize(val, True),
-                         'utf-8').encode('latin-1')
+                         'utf-8').encode('iso-8859-15')
             template = DEFAULT_TEMPLATE % values
         return template
 

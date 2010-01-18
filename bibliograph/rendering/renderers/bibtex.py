@@ -121,10 +121,10 @@ class BibtexRenderView(BaseRenderer):
 
         # leave these lines to debug _utf8enc2latex_mapping problems (for now)
         try:
-            if resolve_unicode: debug = utils._decode(bibtex).encode('latin-1')
+            if resolve_unicode: debug = utils._decode(bibtex).encode('iso-8859-15')
         except UnicodeEncodeError:
             log.error(
-                'UnicodeEncodeError (latin-1): caused by object with ID: %s',
+                'UnicodeEncodeError (iso-8859-15): caused by object with ID: %s',
                 bib_key
                 )
 
