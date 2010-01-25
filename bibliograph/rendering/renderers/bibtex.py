@@ -54,9 +54,9 @@ class BibtexRenderView(BaseRenderer):
         bib_key = utils._validKey(entry)
         bibtex = "\n@%s{%s," % (entry.publication_type, bib_key)
 
-        if hasattr(entry, 'editors') and self._isRenderableField('editors', omit):
+        if getattr(entry, 'editors', None) and self._isRenderableField('editors', omit):
             bibtex += "\n  editor = {%s}," % self._renderAuthors(entry.editors)
-        if self._isRenderableField('authors', omit):
+        if getattr(entry, 'authors', None) and self._isRenderableField('authors', omit):
             bibtex += "\n  author = {%s}," % self._renderAuthors(entry.authors)
         if self._isRenderableField('title', omit):
             if title_force_uppercase:

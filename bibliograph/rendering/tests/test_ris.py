@@ -19,7 +19,8 @@ class TestRisRenderer(BaseRendererTestCase):
         out1 = renderer().strip()
         self.failUnless(source1 == out1)
         # First we want no editor, but an author:
-        ref.editor_flag = False
+        ref.authors = ref.editors [:]
+        del ref.editors
         renderer = RisRenderView(ref, TestRequest())
         source2 = self.readFile(setup.SOURCE2_RIS).encode('utf8').strip()
         out2 = renderer().strip()
@@ -38,7 +39,8 @@ class TestRisRenderer(BaseRendererTestCase):
         out1 = renderer.render([ref]).strip()
         self.failUnless(source1 == out1)
         # First we want no editor, but an author:
-        ref.editor_flag = False
+        ref.authors = ref.editors [:]
+        del ref.editors
         source2 = self.readFile(setup.SOURCE2_RIS).strip()
         out2 = renderer.render([ref]).strip()
         self.failUnless(source2 == out2)

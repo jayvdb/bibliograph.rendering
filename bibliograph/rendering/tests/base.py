@@ -2,6 +2,7 @@ import unittest
 import codecs
 from zope.interface import implements
 from bibliograph.core.interfaces import IBibliographicReference
+from bibliograph.core.content import Author
 from zope.app.testing.placelesssetup import setUp
 from zope.app.testing.placelesssetup import tearDown
 from zope.app.testing import ztapi
@@ -15,45 +16,38 @@ from bibliograph.rendering.renderers.endnote import XmlRenderView
 from bibliograph.rendering.renderers.bibtex import BibtexRenderView
 from bibliograph.rendering.interfaces import IBibTransformUtility
 
-class Name(dict):
 
-    def __call__(self):
-        return ' '.join([self['firstnames'], self['lastnames']])
+AUTH1 = Author()
+AUTH1.firstname = u'Heinz'
+AUTH1.middlename = u''
+AUTH1.lastname = u'M\xfcller'
+#unicode('M\u00FCller', 'utf8')?
+#u'\u00FC' 
+AUTH1.isEditor = True
 
-class Names(list):
-
-    def __call__(self):
-        return u', '.join([a() for a in self])
 
 class SimpleContent(Contained, dict):
 
     implements(IBibliographicReference)
 
-    publication_type = u'Book'
-    editor_flag = True
-    source_fields = []
-    field_values = []
     __name__ = 'approach'
 
-    title = u'A new approach to managing literat\xfcre'
-    publication_year = 1985
-    abstract = u'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
-    subject = [u'Manage Literat\xfcr']
-    note = u''
-    annote = u''
-    url = u"http://www.books.com/approach"
+    def __init__(self):
+        self.publication_type = u'Book'
+        self.source_fields = []
+        self.field_values = []
+        self.title = u'A new approach to managing literat\xfcre'
+        self.publication_year = 1985
+        self.abstract = u'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+        self.subject = [u'Manage Literat\xfcr']
+        self.note = u''
+        self.annote = u''
+        self.url = u"http://www.books.com/approach"
+        self.editors = [AUTH1]
+        self.authors = []
 
-    @property
-    def authors(self):
-        return self.getAuthors()()
-
-    def getAuthors(self, **kwargs):
-        return Names([Name(firstnames=u'Heinz',
-                           lastnames=u'M\xfcller',
-                           homepage=u'http://www.zope.org')])
-
-    def getFieldValue(self, name):
-        return self[name]
+    #def getFieldValue(self, name):
+    #    return self[name]
 
 class AbsoluteURL(object):
 

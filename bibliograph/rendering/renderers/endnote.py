@@ -64,6 +64,8 @@ class EndnoteRenderView(BaseRenderer):
                                          name=u"external")
         out = transform.render(
             source, self.source_format, self.target_format, output_encoding)
+        if msdos_eol_style is False:
+            out = out.replace('\r\n', '\n').replace('\r', '\n')
         return out
 
 ###############################################################################

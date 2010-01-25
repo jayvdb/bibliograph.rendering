@@ -18,7 +18,8 @@ class TestBibtexRenderer(BaseRendererTestCase):
         out1 = renderer().strip()
         self.failUnless(source1 == out1)
         # First we want no editor, but an author:
-        ref.editor_flag = False
+        ref.authors = ref.editors [:]
+        del ref.editors
         renderer = BibtexRenderView(ref, TestRequest())
         source2 = self.readFile(setup.SOURCE2_BIB).encode('utf-8').strip()
         out2 = renderer().strip()
@@ -37,7 +38,8 @@ class TestBibtexRenderer(BaseRendererTestCase):
         out1 = renderer.render([ref]).strip()
         self.failUnless(source1 == out1)
         # First we want no editor, but an author:
-        ref.editor_flag = False
+        ref.authors = ref.editors [:]
+        del ref.editors
         source2 = self.readFile(setup.SOURCE2_BIB).encode('utf-8').strip()
         out2 = renderer.render([ref]).strip()
         self.failUnless(source2 == out2)
