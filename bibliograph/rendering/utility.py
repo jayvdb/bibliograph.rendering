@@ -166,6 +166,7 @@ class BibtexRenderer(UtilityBaseClass):
 
     def render(self, objects,
                      title_force_uppercase=False,
+                     msdos_eol_style=False,
                      omit_fields_mapping={}):
         """ Export a bunch of bibliographic entries in bibex format"""
 
@@ -328,7 +329,6 @@ class PdfRenderer(UtilityBaseClass):
             context = objects
 
         source = BibtexRenderer().render(objects,
-                              output_encoding='iso-8859-1',
                               title_force_uppercase=True)
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')
