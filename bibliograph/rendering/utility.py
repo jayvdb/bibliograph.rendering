@@ -159,21 +159,15 @@ class BibtexRenderer(UtilityBaseClass):
     __name__ = u'BibTeX'
     source_format = None
     target_format = u'bib'
-    description = u''
-    available_encodings = _python_encodings
-    default_encoding = u''
+    description = u'BibTeX renderer'
     view_name = u'reference.bib'
-
     available = True
     enabled = True
 
     def render(self, objects,
-                     output_encoding=None,
                      title_force_uppercase=False,
-                     msdos_eol_style=False,
                      omit_fields_mapping={}):
         """ Export a bunch of bibliographic entries in bibex format"""
-        resolve_unicode = output_encoding not in UNICODE_ENCODINGS
 
         #request = getattr(objects[0], 'REQUEST', None)
         #if request is None:
@@ -204,20 +198,19 @@ class BibtexRenderer(UtilityBaseClass):
 
             # do rendering for entry
             view = getMultiAdapter((ref, request), name=self.view_name)
-            omit_fields = omit_fields_mapping.get(ref.publication_type,
-                                                  [])
-            bibtex_string = view.render(
-                title_force_uppercase=title_force_uppercase,
-                omit_fields=omit_fields
-                )
+            omit_fields = omit_fields_mapping.get(ref.publication_type, [])
+            bibtex_string = view.render(title_force_uppercase=title_force_uppercase,
+                                        omit_fields=omit_fields
+                                        )
             rendered.append(bibtex_string)
 
         rendered = ''.join(rendered)
         if msdos_eol_style:
             rendered = rendered.replace('\n', '\r\n')
 
-        rendered  = _normalize(rendered, resolve_unicode=resolve_unicode)
-        return _convertToOutputEncoding(rendered, output_encoding=output_encoding)
+        rendered = _normalize(rendered, resolve_unicode=True)
+#        return _convertToOutputEncoding(rendered, output_encoding=output_encoding)
+        return rendered
 
 
 ###############################################################################
