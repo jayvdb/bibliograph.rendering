@@ -40,6 +40,7 @@ from bibliograph.core.encodings import _python_encodings
 from bibliograph.core.interfaces import IBibliography
 from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.core.interfaces import IBibliographicReference
+from bibliograph.core.utils import _normalize
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
 from bibliograph.core.utils import _encode
@@ -171,8 +172,7 @@ class BibtexRenderer(UtilityBaseClass):
                      title_force_uppercase=False,
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
-        """ Export a bunch of bibliographic entries in bibex format.
-        """
+        """ Export a bunch of bibliographic entries in bibex format"""
         resolve_unicode = output_encoding not in UNICODE_ENCODINGS
 
         #request = getattr(objects[0], 'REQUEST', None)
@@ -207,15 +207,17 @@ class BibtexRenderer(UtilityBaseClass):
             omit_fields = omit_fields_mapping.get(ref.publication_type,
                                                   [])
             bibtex_string = view.render(
-                resolve_unicode=resolve_unicode,
                 title_force_uppercase=title_force_uppercase,
-                msdos_eol_style=msdos_eol_style,
                 omit_fields=omit_fields
                 )
             rendered.append(bibtex_string)
 
-        return _convertToOutputEncoding(''.join(rendered),
-                                        output_encoding=output_encoding)
+        rendered = ''.join(rendered)
+        if msdos_eol_style:
+            rendered = rendered.replace('\n', '\r\n')
+
+        rendered  = _normalize(rendered, resolve_unicode=resolve_unicode)
+        return _convertToOutputEncoding(rendered, output_encoding=output_encoding)
 
 
 ###############################################################################
@@ -340,5 +342,3 @@ class PdfRenderer(UtilityBaseClass):
         return view.processSource(source,
                                   title=title_or_id(context),
                                   url=absoluteURL(context, request))
-
-# EOF
