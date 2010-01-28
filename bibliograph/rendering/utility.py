@@ -323,8 +323,7 @@ class PdfRenderer(UtilityBaseClass):
         else:
             context = objects
 
-        source = BibtexRenderer().render(objects,
-                              title_force_uppercase=True)
+        source = BibtexRenderer().render(objects, title_force_uppercase=True)
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')
         return view.processSource(source,
