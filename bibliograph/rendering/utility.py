@@ -35,11 +35,10 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 # third party imports
 
 # own factory imports
-from bibliograph.core.encodings import UNICODE_ENCODINGS
-from bibliograph.core.encodings import _python_encodings
 from bibliograph.core.interfaces import IBibliography
 from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.core.interfaces import IBibliographicReference
+from bibliograph.core.utils import _normalize
 from bibliograph.core.utils import _convertToOutputEncoding
 from bibliograph.core.utils import title_or_id
 from bibliograph.core.utils import _encode
@@ -116,6 +115,7 @@ class ExternalTransformUtility(object):
             os.environ['PATH'] = os.pathsep.join([orig_path,
                                                   os.environ['BIBUTILS_PATH']])
 
+        log.info(command)
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   close_fds=False)
         (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
@@ -158,22 +158,17 @@ class BibtexRenderer(UtilityBaseClass):
     __name__ = u'BibTeX'
     source_format = None
     target_format = u'bib'
-    description = u''
-    available_encodings = _python_encodings
-    default_encoding = u''
+    description = u'Export to native BibTeX format (with LaTeX escaping)'
     view_name = u'reference.bib'
-
     available = True
     enabled = True
 
     def render(self, objects,
-                     output_encoding=None,
                      title_force_uppercase=False,
+                     output_encoding=None,
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
-        """ Export a bunch of bibliographic entries in bibex format.
-        """
-        resolve_unicode = output_encoding not in UNICODE_ENCODINGS
+        """ Export a bunch of bibliographic entries in bibex format"""
 
         #request = getattr(objects[0], 'REQUEST', None)
         #if request is None:
@@ -204,18 +199,16 @@ class BibtexRenderer(UtilityBaseClass):
 
             # do rendering for entry
             view = getMultiAdapter((ref, request), name=self.view_name)
-            omit_fields = omit_fields_mapping.get(ref.publication_type,
-                                                  [])
-            bibtex_string = view.render(
-                resolve_unicode=resolve_unicode,
-                title_force_uppercase=title_force_uppercase,
-                msdos_eol_style=msdos_eol_style,
-                omit_fields=omit_fields
-                )
+            omit_fields = omit_fields_mapping.get(ref.publication_type, [])
+            bibtex_string = view.render(title_force_uppercase=title_force_uppercase,
+                                        omit_fields=omit_fields
+                                        )
             rendered.append(bibtex_string)
 
-        return _convertToOutputEncoding(''.join(rendered),
-                                        output_encoding=output_encoding)
+        rendered = ''.join(rendered)
+        if msdos_eol_style:
+            rendered = rendered.replace('\n', '\r\n')
+        return _normalize(rendered, resolve_unicode=True)
 
 
 ###############################################################################
@@ -234,12 +227,8 @@ class EndnoteRenderer(UtilityBaseClass):
     __name__ = u'EndNote'
     source_format = u'bib'
     target_format = u'end'
-    description = u''
-
+    description = u'Export to EndNote format (UTF-8 encoded)'
     enabled = True
-
-    available_encodings = _python_encodings
-    default_encoding = u''
 
     @property
     def available(self):
@@ -249,12 +238,10 @@ class EndnoteRenderer(UtilityBaseClass):
                      title_force_uppercase=False,
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
-        """ do it
-        """
+        """ do it """
         source = BibtexRenderer().render(objects,
-                              output_encoding='iso-8859-1',
-                              title_force_uppercase=title_force_uppercase,
-                              msdos_eol_style=msdos_eol_style)
+                                         title_force_uppercase=title_force_uppercase,
+                                         msdos_eol_style=msdos_eol_style)
         transform = getUtility(IBibTransformUtility, name=u"external")
         return transform.render(source,
                                 self.source_format,
@@ -274,7 +261,7 @@ class RisRenderer(EndnoteRenderer):
 
     __name__ = u'RIS'
     target_format = u'ris'
-    description = u''
+    description = u'Export to RIS format (Research Information Systems/Reference Manager, UTF-8 encoded)'
 
     enabled = True
 
@@ -291,7 +278,7 @@ class XmlRenderer(EndnoteRenderer):
 
     __name__ = u'XML (MODS)'
     target_format = u'xml'
-    description = u''
+    description = u'XML/MODS (UTF-8 encoded)'
 
     enabled = True
 
@@ -310,11 +297,10 @@ class PdfRenderer(UtilityBaseClass):
     __name__ = u'PDF'
     source_format = u''
     target_format = u'pdf'
-    description = u''
+    description = u'Generate PDF'
 
     enabled = True
 
-    available_encodings = []
     default_encoding = u''
 
     @property
@@ -332,13 +318,9 @@ class PdfRenderer(UtilityBaseClass):
         else:
             context = objects
 
-        source = BibtexRenderer().render(objects,
-                              output_encoding='iso-8859-1',
-                              title_force_uppercase=True)
+        source = BibtexRenderer().render(objects, title_force_uppercase=True)
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')
         return view.processSource(source,
                                   title=title_or_id(context),
                                   url=absoluteURL(context, request))
-
-# EOF

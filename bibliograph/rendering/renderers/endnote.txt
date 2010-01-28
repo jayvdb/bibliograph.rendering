@@ -12,16 +12,17 @@ Call the EndNote render view
 
   >>> request = TestRequest()
   >>> view = EndnoteRenderView(context, request)
-
   >>> print view()
   %0 Book
   %T A new approach to managing literatüre
   %E Müller, Heinz
   %D 1985
+  %@ 1234567890
   %F approach
   %X Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   %K Manage Literatür
   %U http://www.books.com/approach
+  %U http://dx.doi.org/0987654321
   <BLANKLINE>
   <BLANKLINE>
 
@@ -36,10 +37,12 @@ First we want no editor, but an author:
   %T A new approach to managing literatüre
   %A Müller, Heinz
   %D 1985
+  %@ 1234567890
   %F approach
   %X Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   %K Manage Literatür
   %U http://www.books.com/approach
+  %U http://dx.doi.org/0987654321
   <BLANKLINE>
   <BLANKLINE>
 
@@ -51,8 +54,10 @@ We can also omit some fields:
   %0 Book
   %T A new approach to managing literatüre
   %D 1985
+  %@ 1234567890
   %F approach
   %K Manage Literatür
+  %U http://dx.doi.org/0987654321
   <BLANKLINE>
   <BLANKLINE>
 
