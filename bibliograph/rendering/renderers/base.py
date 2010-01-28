@@ -17,11 +17,11 @@ class BaseRenderer(object):
         filename = 'reference.%s' % self.file_extension
         response.setHeader('Content-Disposition',
                            'attachment; filename=%s' % filename)
-        return self.render(resolve_unicode,
-                           title_force_uppercase,
-                           msdos_eol_style,
-                           output_encoding,
-                           omit_fields)
+        return self.render(resolve_unicode=resolve_unicode,
+                           title_force_uppercase=title_force_uppercase,
+                           msdos_eol_style=msdos_eol_style,
+                           output_encoding=output_encoding,
+                           omit_fields=omit_fields)
 
     def _isRenderableField(self, field_name, omit):
         if field_name.lower() in omit:

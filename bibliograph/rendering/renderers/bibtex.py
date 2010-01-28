@@ -49,7 +49,10 @@ class BibtexRenderView(BaseRenderer):
     file_extension = 'bib'
 
     def render(self, title_force_uppercase=False, omit_fields=[],
-              output_encoding=None):
+              msdos_eol_style=None, # not used
+              resolve_unicode=None, # not used
+              output_encoding=None, # not used
+              ):
         """
         renders a BibliographyEntry object in BiBTex format
         """

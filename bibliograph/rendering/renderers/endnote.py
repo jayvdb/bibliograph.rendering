@@ -55,11 +55,7 @@ class EndnoteRenderView(BaseRenderer):
         """
         bibrender = component.queryMultiAdapter((self.context, self.request),
             name=u'reference.bib')
-        source = bibrender.render(msdos_eol_style=msdos_eol_style,
-                                  resolve_unicode=True,
-                                  output_encoding='ascii',
-                                  omit_fields=omit_fields
-                                  )
+        source = bibrender.render(omit_fields=omit_fields)
 
         transform = component.getUtility(IBibTransformUtility,
                                          name=u"external")
