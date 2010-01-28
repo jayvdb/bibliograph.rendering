@@ -169,10 +169,7 @@ class PdfRenderView(BaseRenderer):
 
         cmd = "cd %s; latex %s %s" % (wd, LATEX_OPTS, tex_path)
         log.debug(cmd)
-        p = Popen(cmd,
-                  stderr=PIPE,
-                  stdout=PIPE,
-                  shell=True)
+        p = Popen(cmd, stderr=PIPE, stdout=PIPE, shell=True)
         (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
         latexlog.extend([child_stdout.read().strip(),
@@ -180,10 +177,7 @@ class PdfRenderView(BaseRenderer):
 
         cmd = "cd %s; bibtex %s" % (wd, 'template')
         log.debug(cmd)
-        p = Popen(cmd,
-                  stdout=PIPE,
-                  stderr=PIPE,
-                  shell=True)
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True) 
         (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
         latexlog.extend([child_stdout.read().strip(),
@@ -191,21 +185,14 @@ class PdfRenderView(BaseRenderer):
 
         cmd = "cd %s; latex %s %s" % (wd, LATEX_OPTS, 'template.tex')
         log.debug(cmd)
-        p = Popen(cmd,
-                  stdout=PIPE,
-                  stderr=PIPE,
-                  shell=True)
-        (child_stdout, child_stderr) = (p.stdout, p.stderr)
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True) (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
         latexlog.extend([child_stdout.read().strip(),
                          child_stderr.read().strip()])
 
         cmd = "cd %s; pdflatex %s %s" % (wd, LATEX_OPTS, tex_path)
         log.debug(cmd)
-        p = Popen(cmd,
-                  stdout=PIPE,
-                  stderr=PIPE,
-                  shell=True)
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
         (child_stdout, child_stderr) = (p.stdout, p.stderr)
         sts = os.waitpid(p.pid, 0)
         latexlog.extend([child_stdout.read().strip(),
