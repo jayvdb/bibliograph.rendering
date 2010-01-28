@@ -160,7 +160,7 @@ class BibtexRenderer(UtilityBaseClass):
     __name__ = u'BibTeX'
     source_format = None
     target_format = u'bib'
-    description = u'BibTeX renderer'
+    description = u'Export to native BibTeX format (with LaTeX escaping)'
     view_name = u'reference.bib'
     available = True
     enabled = True
@@ -231,7 +231,7 @@ class EndnoteRenderer(UtilityBaseClass):
     __name__ = u'EndNote'
     source_format = u'bib'
     target_format = u'end'
-    description = u'Endnote renderer'
+    description = u'Export to EndNote format (UTF-8 encoded)'
     enabled = True
 
     @property
@@ -265,7 +265,7 @@ class RisRenderer(EndnoteRenderer):
 
     __name__ = u'RIS'
     target_format = u'ris'
-    description = u'RIS renderer'
+    description = u'Export to RIS format (Research Information Systems/Reference Manager, UTF-8 encoded)'
 
     enabled = True
 
@@ -282,7 +282,7 @@ class XmlRenderer(EndnoteRenderer):
 
     __name__ = u'XML (MODS)'
     target_format = u'xml'
-    description = u'XML renderer'
+    description = u'XML/MODS (UTF-8 encoded)'
 
     enabled = True
 
