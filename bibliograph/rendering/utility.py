@@ -117,6 +117,7 @@ class ExternalTransformUtility(object):
             os.environ['PATH'] = os.pathsep.join([orig_path,
                                                   os.environ['BIBUTILS_PATH']])
 
+        log.info(command)
         p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   close_fds=False)
         (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
@@ -230,12 +231,8 @@ class EndnoteRenderer(UtilityBaseClass):
     __name__ = u'EndNote'
     source_format = u'bib'
     target_format = u'end'
-    description = u''
-
+    description = u'Endnote renderer'
     enabled = True
-
-    available_encodings = _python_encodings
-    default_encoding = u''
 
     @property
     def available(self):
@@ -245,12 +242,10 @@ class EndnoteRenderer(UtilityBaseClass):
                      title_force_uppercase=False,
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
-        """ do it
-        """
+        """ do it """
         source = BibtexRenderer().render(objects,
-                              output_encoding='iso-8859-1',
-                              title_force_uppercase=title_force_uppercase,
-                              msdos_eol_style=msdos_eol_style)
+                                         title_force_uppercase=title_force_uppercase,
+                                         msdos_eol_style=msdos_eol_style)
         transform = getUtility(IBibTransformUtility, name=u"external")
         return transform.render(source,
                                 self.source_format,
@@ -270,7 +265,7 @@ class RisRenderer(EndnoteRenderer):
 
     __name__ = u'RIS'
     target_format = u'ris'
-    description = u''
+    description = u'RIS renderer'
 
     enabled = True
 
@@ -287,7 +282,7 @@ class XmlRenderer(EndnoteRenderer):
 
     __name__ = u'XML (MODS)'
     target_format = u'xml'
-    description = u''
+    description = u'XML renderer'
 
     enabled = True
 
@@ -306,7 +301,7 @@ class PdfRenderer(UtilityBaseClass):
     __name__ = u'PDF'
     source_format = u''
     target_format = u'pdf'
-    description = u''
+    description = u'Generate PDF'
 
     enabled = True
 
