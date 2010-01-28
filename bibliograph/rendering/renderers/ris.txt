@@ -21,6 +21,7 @@ Call the EndNote render view
   KW  - Manage Literatür
   AB  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   UR  - http://www.books.com/approach
+  UR  - http://dx.doi.org/0987654321
   ID  - approach
   ER  ...
   <BLANKLINE>
@@ -37,8 +38,10 @@ First we want no editor, but an author:
   PY  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
+  SN  - 1234567890
   AB  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   UR  - http://www.books.com/approach
+  UR  - http://dx.doi.org/0987654321
   ID  - approach
   ER  ...
   <BLANKLINE>
@@ -53,6 +56,8 @@ We can also omit some fields:
   PY  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
+  SN  - 1234567890
+  UR  - http://dx.doi.org/0987654321
   ID  - approach
   ER  ...
   <BLANKLINE>
