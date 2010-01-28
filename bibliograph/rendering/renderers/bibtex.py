@@ -48,7 +48,8 @@ class BibtexRenderView(BaseRenderer):
 
     file_extension = 'bib'
 
-    def render(self, title_force_uppercase=False, omit_fields=[]):
+    def render(self, title_force_uppercase=False, omit_fields=[],
+              output_encoding=None):
         """
         renders a BibliographyEntry object in BiBTex format
         """

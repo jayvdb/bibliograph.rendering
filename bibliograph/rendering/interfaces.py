@@ -57,16 +57,6 @@ class IBibliographyRenderer(Interface):
         default=u'',
         )
 
-    available_encodings = schema.List(
-        title=_('Available encodings'),
-        value_type=schema.TextLine()
-        )
-
-    default_encoding = schema.TextLine(
-        title=_('Default encoding'),
-        default=u''
-        )
-
     available = schema.Bool(
         title=_('Availability of renderer'),
         default=True

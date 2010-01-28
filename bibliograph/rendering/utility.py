@@ -35,8 +35,6 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 # third party imports
 
 # own factory imports
-from bibliograph.core.encodings import UNICODE_ENCODINGS
-from bibliograph.core.encodings import _python_encodings
 from bibliograph.core.interfaces import IBibliography
 from bibliograph.core.interfaces import IBibliographyExport
 from bibliograph.core.interfaces import IBibliographicReference
@@ -167,6 +165,7 @@ class BibtexRenderer(UtilityBaseClass):
 
     def render(self, objects,
                      title_force_uppercase=False,
+                     output_encoding=None,
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
         """ Export a bunch of bibliographic entries in bibex format"""
@@ -209,10 +208,7 @@ class BibtexRenderer(UtilityBaseClass):
         rendered = ''.join(rendered)
         if msdos_eol_style:
             rendered = rendered.replace('\n', '\r\n')
-
-        rendered = _normalize(rendered, resolve_unicode=True)
-#        return _convertToOutputEncoding(rendered, output_encoding=output_encoding)
-        return rendered
+        return _normalize(rendered, resolve_unicode=True)
 
 
 ###############################################################################
@@ -305,7 +301,6 @@ class PdfRenderer(UtilityBaseClass):
 
     enabled = True
 
-    available_encodings = []
     default_encoding = u''
 
     @property
