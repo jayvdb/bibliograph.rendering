@@ -17,6 +17,7 @@ import logging
 from zope.interface import implements
 
 from bibliograph.core import utils
+from bibliograph.core.utils import _normalize
 from bibliograph.rendering.interfaces import IReferenceRenderer
 from base import BaseRenderer
 
@@ -133,4 +134,5 @@ class BibtexRenderView(BaseRenderer):
         fp.close()
         bibtex = file(f_temp, 'r').read()
         os.unlink(f_temp)
-        return bibtex
+        return _normalize(bibtex, resolve_unicode=True)
+

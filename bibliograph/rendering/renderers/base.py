@@ -25,7 +25,7 @@ class BaseRenderer(object):
                            output_encoding=output_encoding,
                            omit_fields=omit_fields)
 
-        return _normalize(result, resolve_unicode=resolve_unicode)
+        return result
 
     def _isRenderableField(self, field_name, omit):
         if field_name.lower() in omit:

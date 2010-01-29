@@ -44,7 +44,7 @@ class EndnoteRenderView(BaseRenderer):
 
     file_extension = 'end'
 
-    def render(self, resolve_unicode=False,
+    def render(self, resolve_unicode=None,
                      title_force_uppercase=False,
                      msdos_eol_style=False,
                      output_encoding=None,
@@ -53,6 +53,7 @@ class EndnoteRenderView(BaseRenderer):
         """
         renders a BibliographyEntry object in EndNote format
         """
+
         bibrender = component.queryMultiAdapter((self.context, self.request),
             name=u'reference.bib')
         source = bibrender.render(omit_fields=omit_fields)

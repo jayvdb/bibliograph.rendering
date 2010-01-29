@@ -208,7 +208,7 @@ class BibtexRenderer(UtilityBaseClass):
         rendered = ''.join(rendered)
         if msdos_eol_style:
             rendered = rendered.replace('\n', '\r\n')
-        return _normalize(rendered, resolve_unicode=True)
+        return rendered
 
 
 ###############################################################################
