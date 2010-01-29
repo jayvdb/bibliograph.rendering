@@ -19,7 +19,8 @@ Call the EndNote render view
   PY  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
-  AB  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+  N2  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+  SN  - 1234567890
   UR  - http://www.books.com/approach
   UR  - http://dx.doi.org/0987654321
   ID  - approach
@@ -38,8 +39,8 @@ First we want no editor, but an author:
   PY  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
+  N2  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   SN  - 1234567890
-  AB  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   UR  - http://www.books.com/approach
   UR  - http://dx.doi.org/0987654321
   ID  - approach
