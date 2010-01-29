@@ -318,6 +318,12 @@ class PdfRenderer(UtilityBaseClass):
         else:
             context = objects
 
+        if not IBibliographyExport.providedBy(context):
+            try:
+                context = context.aq_parent
+            except AttributeError:
+                pass
+
         source = BibtexRenderer().render(objects, title_force_uppercase=True)
         request = getattr(context, 'REQUEST', TestRequest())
         view = getMultiAdapter((context, request), name=u'reference.pdf')
