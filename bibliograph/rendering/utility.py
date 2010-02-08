@@ -30,6 +30,13 @@ from zope.interface import implements
 from zope.publisher.browser import TestRequest
 from zope.traversing.browser.absoluteurl import absoluteURL
 
+try:
+    from Products.CMFBibliographyAT.interface import IBibliographicItem
+    HAVE_CMFBIB_AT = True
+except:
+    HAVE_CMFBIB_AT = False
+
+
 # plone imports
 
 # third party imports
@@ -178,15 +185,22 @@ class BibtexRenderer(UtilityBaseClass):
         # If not, it could be ok if `entries' can be iterated over anyway.
         objects = IBibliography(objects, objects)
 
-        try:
-            # We want the values from a dictionary-ish/IBibliography object
-            entries = objects.itervalues()
-        except AttributeError:
-            # Otherwise we just iterate over what is presumably something
-            # sequence-ish.
-            entries = iter(objects)
-        rendered = []
+        found = False
+        if HAVE_CMFBIB_AT:
+            if IBibliographicItem.providedBy(objects):
+                entries = [objects]
+                found = True
 
+        if not found:
+            try:
+                # We want the values from a dictionary-ish/IBibliography object
+                entries = objects.itervalues()
+            except AttributeError:
+                # Otherwise we just iterate over what is presumably something
+                # sequence-ish.
+                entries = iter(objects)
+
+        rendered = []
         for obj in entries:
             ref = queryAdapter(obj, interface=IBibliographicReference,
                                     name=self.__name__)

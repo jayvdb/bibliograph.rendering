@@ -1,3 +1,7 @@
+1.0.0b3 (2010-02-08)
+====================
+- added support to export single bibliographic items
+
 1.0.0b2 (2010-01-29)
 ====================
 - minor fixes 
