@@ -177,6 +177,11 @@ class BibtexRenderer(UtilityBaseClass):
                      omit_fields_mapping={}):
         """ Export a bunch of bibliographic entries in bibex format"""
 
+        # This implementation here is completely bullshit from the 
+        # beginning. Why is there no interface and API for getting hold
+        # of the exportable items? The iterator interface here sucks.
+        # This method should also work with *single* bibliographic entries.
+
         #request = getattr(objects[0], 'REQUEST', None)
         #if request is None:
         request = TestRequest()
