@@ -159,7 +159,10 @@ class PdfRenderView(BaseRenderer):
         # characters. A better solution would be to generated a utf-8 encoding
         # TeX template.tex file supporting UTF-8 directly on the TeX level.
         # {ajung)
-        bib_file = codecs.open(bib_path, 'w', encoding='ascii', errors='replace')
+
+        # ensure that ascii is really ascii 
+        source = unicode(source, 'ascii', 'ignore').encode('ascii')
+        bib_file = codecs.open(bib_path, 'w', encoding='ascii', errors='ignore')
         tex_file.write(template)
         bib_file.write(source)
         tex_file.close()
