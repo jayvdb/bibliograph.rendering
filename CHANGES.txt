@@ -1,3 +1,7 @@
+1.0.0 (2010-03-19)
+==================
+* final release
+
 1.0.0c3 (2010-03-09)
 ====================
 * fixed unicode issues in PDF renderer
