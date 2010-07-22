@@ -120,11 +120,10 @@ class BibtexRenderView(BaseRenderer):
         keys = entry.identifiers.keys()
         keys.sort()
         source_fields_keys = [tp[0].lower() for tp in entry.source_fields]
-        for k in keys:
-            v = entry.identifiers[k]
-            if v:
-                if not k.lower() in source_fields_keys:
-                    print >>fp,  _c(u"  %s = {%s},", k.lower(), v)
+        for identifier, value in entry.identifiers.items():
+            if value:
+                print >>fp,  _c(u"  %s = {%s},", identifier.lower(), value)
+
 
         # remove trailing command
         fp.seek(-2, 2)

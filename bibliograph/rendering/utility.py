@@ -287,6 +287,7 @@ class EndnoteRenderer(UtilityBaseClass):
                      msdos_eol_style=False,
                      omit_fields_mapping={}):
         """ do it """
+
         source = BibtexRenderer().render(objects,
                                          title_force_uppercase=title_force_uppercase,
                                          msdos_eol_style=msdos_eol_style)
