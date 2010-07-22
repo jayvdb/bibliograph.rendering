@@ -1,3 +1,8 @@
+1.0.1 (2010-07-22)
+==================
+* export all identifiers independent of the content-type specific
+  'source_fields' configuration (which might be incomplete)
+
 1.0.0 (2010-03-19)
 ==================
 * final release
