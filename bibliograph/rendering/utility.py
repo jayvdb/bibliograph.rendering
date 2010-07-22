@@ -331,6 +331,21 @@ class XmlRenderer(EndnoteRenderer):
 
     enabled = True
 
+    def render(self, objects, output_encoding=None,
+                     title_force_uppercase=False,
+                     msdos_eol_style=False,
+                     omit_fields_mapping={}):
+        """ do it """
+
+        # render with output_encoding=None in order to avoid a duplicate conversion
+        # the output of 'bib2xml -un' to utf-8 (it is utf-8 already)
+        return super(XmlRenderer, self).render(objects, 
+                                               output_encoding=None,
+                                               title_force_uppercase=title_force_uppercase,
+                                               msdos_eol_style=msdos_eol_style,
+                                               omit_fields_mapping=omit_fields_mapping
+                                               )
+
 ###############################################################################
 
 class PdfRenderer(UtilityBaseClass):

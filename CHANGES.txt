@@ -1,3 +1,8 @@
+1.0.2 (2010-07-22)
+==================
+* fixed unnecessary conversion of utf-8 inside the XML renderer
+  causing improper output for non-ascii content
+
 1.0.1 (2010-07-22)
 ==================
 * export all identifiers independent of the content-type specific
