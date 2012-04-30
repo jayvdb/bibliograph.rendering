@@ -32,6 +32,7 @@ def _c(fmt, *args):
     try:
         return fmt % args
     except UnicodeDecodeError:
+        #TODO: Return the field with quotations
         args = tuple([repr(a) for a in args])
         return fmt % args
 
