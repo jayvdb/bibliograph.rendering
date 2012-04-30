@@ -174,28 +174,28 @@ class PdfRenderView(BaseRenderer):
             latexlog.append(cmd)
             p = Popen(cmd, stderr=PIPE, stdout=PIPE, shell=True)
             (child_stdout, child_stderr) = p.communicate()
-        latexlog.extend([child_stdout.strip(),
+            latexlog.extend([child_stdout.strip(),
                          child_stderr.strip()])
 
             cmd = "cd %s; bibtex %s" % (wd, 'template')
             latexlog.append(cmd)
             p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
             (child_stdout, child_stderr) =  p.communicate()
-        latexlog.extend([child_stdout.strip(),
+            latexlog.extend([child_stdout.strip(),
                          child_stderr.strip()])
 
             cmd = "cd %s; latex %s %s" % (wd, LATEX_OPTS, 'template.tex')
             latexlog.append(cmd)
             p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
             (child_stdout, child_stderr) =  p.communicate()
-        latexlog.extend([child_stdout.strip(),
+            latexlog.extend([child_stdout.strip(),
                          child_stderr.strip()])
 
             cmd = "cd %s; pdflatex %s %s" % (wd, LATEX_OPTS, tex_path)
             latexlog.append(cmd)
             p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
             (child_stdout, child_stderr) =  p.communicate()
-        latexlog.extend([child_stdout.strip(),
+            latexlog.extend([child_stdout.strip(),
                          child_stderr.strip()])
 
             pdf_file= open(os.path.join(wd, "template.pdf"), 'r')
