@@ -121,61 +121,63 @@ class ExternalTransformUtility(object):
             return ''
 
         orig_path = os.environ['PATH']
-        if os.environ.has_key('BIBUTILS_PATH'):
-            os.environ['PATH'] = os.pathsep.join([orig_path,
-                                                  os.environ['BIBUTILS_PATH']])
+        try:
+            if 'BIBUTILS_PATH' in os.environ:
+                os.environ['PATH']=os.pathsep.join([os.environ['BIBUTILS_PATH'],
+                                                    orig_path])
 
-        ts = time.time()
-
-        # This is a stinking workaround  with hanging subprocesses on Linux.
-        # We had the case where "end2xml | xml2bib " was just hanging
-        # while reading the results from the output pipeline. So we fall
-        # back in a safe way to os.system() on Linux
-
-        if sys.platform == 'linux2':
-
-            input_filename = tempfile.mktemp()
-            error_filename = tempfile.mktemp()
-            output_filename = tempfile.mktemp()
-            file(input_filename, 'wb').write(_encode(data))
-            command = 'cat "%s" | %s 2>"%s" 1>"%s"' % (input_filename, command, error_filename, output_filename)
-            st = os.system(command)
-            error = file(output_filename, 'rb').read()
-            result = file(output_filename, 'rb').read()
-            os.unlink(input_filename)
-            os.unlink(output_filename)
-            os.unlink(error_filename)
-
-        else:
             ts = time.time()
-            log.info(command)
-            p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                      close_fds=False)
-            (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
-            fi.write(_encode(data))
-            fi.close()
-            result = fo.read()
-            fo.close()
-            error = fe.read()
-            fe.close()
 
-        log.info('Execution time: %2.2f seconds' % (time.time() - ts))
+            # This is a stinking workaround  with hanging subprocesses on Linux.
+            # We had the case where "end2xml | xml2bib " was just hanging
+            # while reading the results from the output pipeline. So we fall
+            # back in a safe way to os.system() on Linux
 
-        if error:
-            # command could be like 'ris2xml', or 'ris2xml | xml2bib'. It
-            # seems unlikely, but we'll code for an arbitrary number of
-            # pipes...
-            command_list = command.split(' | ')
-            for each in command_list:
-                if each in error and not result:
-                    log.error("'%s' not found. Make sure 'bibutils' is installed.",
-                              command)
-        if output_encoding is None:
-            return result
-        else:
-            return _convertToOutputEncoding(result,
-                                            output_encoding=output_encoding)
-        os.environ['PATH'] = orig_path
+            if sys.platform.startswith('linux'):
+    
+                input_filename = tempfile.mktemp()
+                error_filename = tempfile.mktemp()
+                output_filename = tempfile.mktemp()
+                file(input_filename, 'wb').write(_encode(data))
+                command = 'cat "%s" | %s 2>"%s" 1>"%s"' % (input_filename, command, error_filename, output_filename)
+                st = os.system(command)
+                error = file(output_filename, 'rb').read()
+                result = file(output_filename, 'rb').read()
+                os.unlink(input_filename)
+                os.unlink(output_filename)
+                os.unlink(error_filename)
+    
+            else:
+                ts = time.time()
+                log.info(command)
+                p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+                          close_fds=False)
+                (fi, fo, fe) = (p.stdin, p.stdout, p.stderr)
+                fi.write(_encode(data))
+                fi.close()
+                result = fo.read()
+                fo.close()
+                error = fe.read()
+                fe.close()
+
+            log.info('Execution time: %2.2f seconds' % (time.time() - ts))
+
+            if error:
+                # command could be like 'ris2xml', or 'ris2xml | xml2bib'. It
+                # seems unlikely, but we'll code for an arbitrary number of
+                # pipes...
+                command_list = command.split(' | ')
+                for each in command_list:
+                    if each in error and not result:
+                        log.error("'%s' not found. Make sure 'bibutils' is installed.",
+                                  command)
+            if output_encoding is None:
+                return result
+            else:
+                return _convertToOutputEncoding(result,
+                                                output_encoding=output_encoding)
+        finally:
+            os.environ['PATH'] = orig_path
 
     transform = render
 
