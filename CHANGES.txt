@@ -1,4 +1,4 @@
-1.0.2_FHNW1 (2012-04-27)
+1.0.2_FHNW1 (2012-06-21)
 ========================
 
 * Fixed "deadlock" when calling pdflatex.
