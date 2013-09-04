@@ -1,5 +1,3 @@
-.. contents::
-
 bibliograph.rendering
 =====================
 
@@ -8,6 +6,32 @@ adapter to extract data from Zope/Plone-objects and provides utilities to call
 the renderers. Currently supported formats are: bibtex, endnote, pdf, xml
 (mods), and ris.
 
-Homepage: http://pypi.python.org/pypi/bibliograph.rendering
 
-Code repository: https://github.com/collective/bibliograph.rendering/
+Transforms
+----------
+
+Only the bibtex bibliography is rendered from scratch. pdf is rendered with
+pdflatex[2]_. All other formats (EndNote, XML, RIS, ...) are transformed using
+external tools from bibutils[1]_. At the time of writing I used version 3.38
+of the tools. See the following table for a list of dependencies:
+
++--------+-------------------------+
+| Format | Dependency              |
++========+=========================+
+| bibtex | none (builtin)          |
++--------+-------------------------+
+| pdf    | latex, bibtex, pdflatex |
++--------+-------------------------+
+| others | bibutils                |
++--------+-------------------------+
+
+
+.. [1] http://bibutils.refbase.org/
+.. [2] http://www.latex-project.org/
+
+
+Resources
+---------
+
+- Homepage: http://pypi.python.org/pypi/bibliograph.rendering
+- Code repository: https://github.com/collective/bibliograph.rendering/

@@ -18,18 +18,10 @@ long_description = (
     + '\n' +
     read('CHANGES.txt')
     + '\n' +
-    'Detailed Documentation\n'
-    '**********************\n'
-    + '\n' +
-    read('bibliograph', 'rendering', 'README.txt')
-    + '\n' +
     'Contributors\n'
     '************\n'
     + '\n' +
     read('CONTRIBUTORS.txt')
-    + '\n' +
-    'Download\n'
-    '********\n'
     )
 
 entry_points="""
