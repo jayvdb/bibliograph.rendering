@@ -26,7 +26,7 @@ of the tools. See the following table for a list of dependencies:
 +--------+-------------------------+
 
 
-.. _bibutils: http://bibutils.refbase.org/
+.. _bibutils: http://sourceforge.net/p/bibutils/home/Bibutils/
 .. _pdflatex: http://www.latex-project.org/
 
 
