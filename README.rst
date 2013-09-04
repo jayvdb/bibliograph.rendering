@@ -11,8 +11,8 @@ Transforms
 ----------
 
 Only the bibtex bibliography is rendered from scratch. pdf is rendered with
-`pdflatex`_. All other formats (EndNote, XML, RIS, ...) are transformed using
-external tools from `bibutils`_. At the time of writing I used version 3.38
+pdflatex_. All other formats (EndNote, XML, RIS, ...) are transformed using
+external tools from bibutils_. At the time of writing I used version 3.38
 of the tools. See the following table for a list of dependencies:
 
 +--------+-------------------------+
@@ -26,8 +26,8 @@ of the tools. See the following table for a list of dependencies:
 +--------+-------------------------+
 
 
-.. bibutils:: http://bibutils.refbase.org/
-.. pdflatex:: http://www.latex-project.org/
+.. _bibutils:: http://bibutils.refbase.org/
+.. _pdflatex:: http://www.latex-project.org/
 
 
 Resources
