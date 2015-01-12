@@ -1,11 +1,11 @@
-Bibtext Renderer
-================
+RIS Renderer
+============
 
 Add a lightweight content object implementing IBibliographicReference.
 
   >>> context = SimpleContent()
 
-Call the EndNote render view
+Call the RIS render view
 
   >>> from zope.publisher.browser import TestRequest
   >>> from bibliograph.rendering.renderers.endnote import RisRenderView
