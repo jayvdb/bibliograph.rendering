@@ -54,5 +54,6 @@ setup(name='bibliograph.rendering',
                         'bibliograph.core'
                         ],
       tests_require=['zope.testing'],
+      test_suite="bibliograph.rendering.tests.test_doctests.test_suite",
       entry_points=entry_points,
       )
