@@ -5,6 +5,8 @@ Render a bibliography in pdf-format.
 
 Add a lightweight content object implementing IBibliographicReference.
 
+  >>> from bibliograph.rendering.tests.test_doctests import setUp, SimpleContent
+  >>> setUp()
   >>> context = SimpleContent()
 
 Call the EndNote render view
@@ -17,7 +19,7 @@ Call the EndNote render view
 
   We just check, if there's some PDF. We don't want to parse the output
   here.
-  >>> print view()
+  >>> print view()  # doctest: +ELLIPSIS
   %PDF-1...
   %%EOF
   <BLANKLINE>
@@ -31,7 +33,7 @@ Render two documents with the pdf render utility. We can pass a list/tuple of
 bibliographic content as first parameter ...
 
   >>> from bibliograph.rendering.utility import PdfRenderer
-  >>> print PdfRenderer().render([context, c1, c2])
+  >>> print PdfRenderer().render([context, c1, c2])  # doctest: +ELLIPSIS
   %PDF-...
   %%EOF
   <BLANKLINE>
@@ -46,7 +48,7 @@ Setup the pdf-render view (This is done by zcml normaly.):
   >>> from bibliograph.core.interfaces import IBibliographyExport
   >>> ztapi.browserView(IBibliographyExport, 'reference.pdf', PdfRenderView)
 
-  >>> from zope.app.container.sample import SampleContainer
+  >>> from zope.container.sample import SampleContainer
   >>> container = SampleContainer()
   >>> setattr(container, '__name__', 'BibContainer')
 
@@ -58,7 +60,7 @@ Setup the pdf-render view (This is done by zcml normaly.):
   >>> container['c1'] = c1
   >>> container['c2'] = c2
 
-  >>> print PdfRenderer().render(container)
+  >>> print PdfRenderer().render(container)  # doctest: +ELLIPSIS
   %PDF-...
   %%EOF
   <BLANKLINE>

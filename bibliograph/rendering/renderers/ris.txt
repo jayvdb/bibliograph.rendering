@@ -3,6 +3,8 @@ RIS Renderer
 
 Add a lightweight content object implementing IBibliographicReference.
 
+  >>> from bibliograph.rendering.tests.test_doctests import setUp, SimpleContent
+  >>> setUp()
   >>> context = SimpleContent()
 
 Call the RIS render view
@@ -13,16 +15,17 @@ Call the RIS render view
   >>> request = TestRequest()
   >>> view = RisRenderView(context, request)
 
-  >>> print view()
+  >>> print view()  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   TY  - BOOK
   ED  - Müller, Heinz
-  PY  - 1985//
+  PY  - 1985
+  DA  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
-  N2  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+  AB  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   SN  - 1234567890
   UR  - http://www.books.com/approach
-  UR  - http://dx.doi.org/0987654321
+  DO  - 0987654321
   ID  - approach
   ER  ...
   <BLANKLINE>
@@ -33,16 +36,17 @@ First we want no editor, but an author:
 
   >>> context.editor_flag = False
   >>> view = RisRenderView(context, request)
-  >>> print view()
+  >>> print view()  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   TY  - BOOK
   AU  - Müller, Heinz
-  PY  - 1985//
+  PY  - 1985
+  DA  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
-  N2  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+  AB  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   SN  - 1234567890
   UR  - http://www.books.com/approach
-  UR  - http://dx.doi.org/0987654321
+  DO  - 0987654321
   ID  - approach
   ER  ...
   <BLANKLINE>
@@ -52,13 +56,14 @@ We can also omit some fields:
 
   >>> request = TestRequest(form=dict(omit_fields=['authors', 'uRl', 'abSTRACT']))
   >>> view = RisRenderView(context, request)
-  >>> print view()
+  >>> print view()  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   TY  - BOOK
-  PY  - 1985//
+  PY  - 1985
+  DA  - 1985//
   TI  - A new approach to managing literatüre
   KW  - Manage Literatür
   SN  - 1234567890
-  UR  - http://dx.doi.org/0987654321
+  DO  - 0987654321
   ID  - approach
   ER  ...
   <BLANKLINE>

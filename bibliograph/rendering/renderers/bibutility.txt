@@ -3,6 +3,8 @@ Bibtext Renderer (bibutils components)
 
 Add a lightweight content object implementing IBibliographicReference.
 
+  >>> from bibliograph.rendering.tests.test_doctests import setUp, SimpleContent
+  >>> setUp()
   >>> c1 = SimpleContent()
   >>> c2 = SimpleContent()
 
@@ -10,7 +12,7 @@ Render two documents with the endnote render utility
 
 
   >>> from bibliograph.rendering.utility import EndnoteRenderer
-  >>> print EndnoteRenderer().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print EndnoteRenderer().render([c1, c2]) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   %0 Book
   ...
   %0 Book
@@ -19,14 +21,14 @@ Render two documents with the endnote render utility
 We can do this with the other formats as well:
 
   >>> from bibliograph.rendering.utility import RisRenderer
-  >>> print RisRenderer().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print RisRenderer().render([c1, c2]) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   TY  - BOOK
   ...
   TY  - BOOK
   ...
 
   >>> from bibliograph.rendering.utility import XmlRenderer
-  >>> print XmlRenderer().render([c1, c2]) #doctest: +NORMALIZE_WHITESPACE
+  >>> print XmlRenderer().render([c1, c2]) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   <?xml version="1.0" encoding="UTF-8"?>
   ...
   <mods ID="approacha">

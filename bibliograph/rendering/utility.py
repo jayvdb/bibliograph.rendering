@@ -100,13 +100,14 @@ class ExternalTransformUtility(object):
             >>> if _hasCommands(commands.get('bib2end')):
             ...     result = ExternalTransformUtility().render(data, 'bib', 'end')
             ...     # We need to take care of any stray Windows carriage returns.
-            ...     result = result.replace('\r', '')
-            ...     assert '''
-            ... %0 Book
-            ... %A Werner, kla"us title =. H"arry Motter
-            ... %D 1980
-            ... %I Diogenes
-            ... %F bookreference.2008-02-04.7570607450 '''.strip() in result
+            ...     result = result.replace('\\r', '')
+            ...     result.strip().splitlines()  # doctest: +NORMALIZE_WHITESPACE
+            ['%0 Book',
+             '%T H"arry Motter',
+             '%A Werner, kla"us',
+             '%D 1980',
+             '%I Diogenes',
+             '%F bookreference.2008-02-04.7570607450']
 
             This one is not allowed. No valid transformer exists for
             `foo` and `bar` (foo2bar)

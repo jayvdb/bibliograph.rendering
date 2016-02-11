@@ -6,7 +6,7 @@ from zope.component import testing
 from zope.testing import doctestunit
 from zope.traversing.browser.interfaces import IAbsoluteURL
 
-from zope.app.container.contained import Contained
+from zope.container.contained import Contained
 from zope.interface import implements
 
 from bibliograph.core.interfaces import IBibliographicReference

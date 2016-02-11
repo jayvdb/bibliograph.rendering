@@ -3,6 +3,8 @@ Bibtext Renderer
 
 Add a lightweight content object implementing IBibliographicReference.
 
+  >>> from bibliograph.rendering.tests.test_doctests import setUp, SimpleContent
+  >>> setUp()
   >>> context = SimpleContent()
 
 Call the EndNote render view

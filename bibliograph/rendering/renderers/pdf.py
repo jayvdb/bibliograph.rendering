@@ -202,11 +202,12 @@ class PdfRenderView(BaseRenderer):
         latexlog.extend([child_stdout.read().strip(),
                          child_stderr.read().strip()])
 
+        log.debug('\n'.join(latexlog))
+
         pdf_file= open(os.path.join(wd, "template.pdf"), 'r')
         pdf = pdf_file.read()
         pdf_file.close()
         clearWorkingDirectory(wd)
-        log.debug('\n'.join(latexlog))
         return pdf
 
 # EOF

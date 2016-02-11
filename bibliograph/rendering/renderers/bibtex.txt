@@ -3,6 +3,7 @@ BibTeX Renderer
 
 Add a lightweight content object implementing IBibliographicReference.
 
+  >>> from bibliograph.rendering.tests.test_doctests import SimpleContent
   >>> context = SimpleContent()
 
 Let's check the interface:
@@ -33,4 +34,4 @@ Call the view
     isbn = {1234567890}
   }
   <BLANKLINE>
-
+  <BLANKLINE>

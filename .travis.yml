@@ -1,0 +1,30 @@
+language: python
+
+python:
+  - "2.6"
+  - "2.7"
+
+addons:
+  apt:
+    packages:
+      - texlive-latex-base
+      - texlive-fonts-recommended
+
+install:
+  - wget -O bibutils_5.6_src.tgz https://sourceforge.net/projects/bibutils/files/bibutils_5.6_src.tgz/download
+  - tar -xzf bibutils_5.6_src.tgz
+  - cd bibutils_5.6/
+  - ./configure --install-dir $HOME/bin --install-lib $HOME/bin
+  - make
+  - make install
+  - cd ..
+
+  - pip install nose
+  - pip install .
+  - pip install zope.container
+
+script:
+  - python setup.py nosetests --verbosity=2 --with-doctest --doctest-extension=txt --ignore-files=".*doctest.*"
+
+notifications:
+  email: false

@@ -3,6 +3,8 @@ Bibtext Renderer
 
 Add a lightweight content object implementing IBibliographicReference.
 
+  >>> from bibliograph.rendering.tests.test_doctests import setUp, SimpleContent
+  >>> setUp()
   >>> c1 = SimpleContent()
   >>> c2 = SimpleContent()
 
@@ -40,7 +42,7 @@ It is possible to capitalize the title by specifying the option
 `title_force_uppercase`.
 
   >>> print BibtexRenderer().render([c1, c2],
-  ...             title_force_uppercase=True) #doctest: +NORMALIZE_WHITESPACE
+  ...             title_force_uppercase=True)  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   <BLANKLINE>
   @Book{approach,...
   title = {{A} new approach to managing literat{\"{u}}re},
